@@ -3,10 +3,10 @@ import { Logo, marks, WindowMark, type LogoVariant } from './Logo'
 /* Rendered statically by Astro (no client directive) – zero JS on /docs. */
 
 const colorways = [
-  { name: 'Nykyinen', note: 'Tumma luumu. 16 px:ssä se näyttää harmaalta, koska se on lähes yhtä tumma kuin runko.', frame: '#15171c', pane: '#7a4a6e', text: '#15171c' },
-  { name: 'Kirkas luumu', note: 'Sama sävy vaaleampana ja kylläisempänä. Erottuu rungosta, ja väri jatkuu CTA:ssa ja toastissa.', frame: '#15171c', pane: '#b8679f', text: '#15171c', chosen: true },
+  { name: 'Tumma luumu', note: 'Ensimmäinen versio. 16 px:ssä se näyttää harmaalta, koska se on lähes yhtä tumma kuin runko.', frame: '#15171c', pane: '#7a4a6e', text: '#15171c' },
+  { name: 'Kirkas luumu', note: 'Sama sävy vaaleampana ja kylläisempänä. Erottuu rungosta, ja sama luumu toistuu CTA:n hoverissa.', frame: '#15171c', pane: '#b8679f', text: '#15171c', chosen: true },
   { name: 'Ikkunan valo', note: 'Lämmin auringonvalo ruudussa. Tarina on selkein, mutta brändiin tulisi toinen aksenttiväri.', frame: '#15171c', pane: '#f0b44c', text: '#15171c' },
-  { name: 'Taivas', note: 'Figman navbarin sininen: ikkunasta näkyy taivas. Rauhallisin vaihtoehto.', frame: '#15171c', pane: '#8fb3e8', text: '#15171c' },
+  { name: 'Taivas', note: 'Vaalea sininen: ikkunasta näkyy taivas. Rauhallisin vaihtoehto.', frame: '#15171c', pane: '#8fb3e8', text: '#15171c' },
   { name: 'Luumurunko', note: 'Koko merkki luumuna ja ruutu vaalean roosana. Teksti pysyy tummana.', frame: '#7a4a6e', pane: '#ecc6dc', text: '#15171c' },
   { name: 'Luumuteksti', note: 'Nimi luumuna. Lämpimin, mutta nimi menettää terävyyttään pienissä koissa.', frame: '#15171c', pane: '#b8679f', text: '#7a4a6e' },
 ]

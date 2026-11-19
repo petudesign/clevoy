@@ -16,6 +16,8 @@ import { integrations } from '../data/integrations'
 import SectionHead from '../components/docs/SectionHead.astro'
 import Rule from '../components/docs/Rule.astro'
 import Faq from '../components/docs/Faq.astro'
+import CtaButton from '../components/CtaButton.astro'
+import { ArrowSwap } from '../components/ArrowSwap'
 import {
   ArrowRight,
   ArrowUpRight,
@@ -65,7 +67,7 @@ const grouped = Object.entries(
           <div class="flex items-center justify-between gap-4">
             <Logo variant="ikkuna" size={20} tone="dark" />
             <span class="rounded-full border border-white/15 px-3 py-1.5 font-mono text-[11px] text-white/60">
-              v0.1 · 18.11.2026
+              v0.2 · 19.11.2026
             </span>
           </div>
 
@@ -74,7 +76,7 @@ const grouped = Object.entries(
               <p class="mb-5 text-[13px] text-white/60">Konseptiehdotus</p>
               <h1 class="text-[40px] leading-[1.02] font-semibold tracking-[-0.035em] sm:text-[56px] lg:text-[76px]">
                 Sama palvelu.<br />
-                <span class="text-[#d08cbb]">Uusi ilme</span> ja nopeampi pohja.
+                <span class="text-plum-light">Uusi ilme</span> ja nopeampi pohja.
               </h1>
             </div>
             <p class="max-w-[44ch] text-[16px] leading-relaxed text-white/65">
@@ -251,37 +253,46 @@ const grouped = Object.entries(
           </p>
 
           <h3 class="mt-14 mb-4 text-[15px] font-semibold">Napit</h3>
-          <div class="grid grid-cols-1 gap-3 md:grid-cols-[1.3fr_1fr]">
-            <div class="flex flex-col justify-between gap-10 rounded-[2rem] bg-canvas p-8 shadow-[inset_0_0_0_1px_var(--color-line)]">
-              <div class="flex flex-wrap items-center gap-4">
-                <a href="#design-system" class="btn-3d group flex items-center gap-2.5 rounded-full py-3.5 pr-4 pl-6 text-[15px] font-medium text-white">
-                  Tilaa siivous
-                  <span class="grid size-7 place-items-center rounded-full bg-white/12 transition-transform duration-200 ease-[var(--ease-out-strong)] group-hover:translate-x-0.5">
-                    <ArrowRight size={14} weight="bold" />
-                  </span>
-                </a>
-                <a href="#design-system" class="btn-3d btn-3d--sm group flex items-center gap-2 rounded-full py-2.5 pr-3 pl-4 text-[14px] font-medium text-white">
-                  Pieni
-                  <span class="grid size-6 place-items-center rounded-full bg-white/12"><ArrowRight size={13} weight="bold" /></span>
-                </a>
-                <a href="#design-system" class="press rounded-full px-5 py-3.5 text-[15px] font-medium text-ink-soft hover:bg-ink/[0.05] hover:text-ink">
-                  Toissijainen
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div class="flex flex-col justify-between gap-8 rounded-[2rem] bg-canvas p-6 shadow-[inset_0_0_0_1px_var(--color-line)] md:p-8">
+              <div class="flex flex-col items-start gap-5">
+                <CtaButton href="#design-system" label="Tilaa siivous" />
+                <div class="flex flex-wrap items-center gap-3">
+                  <a href="#design-system" class="cx cx--sm cx--light cx--quiet">
+                    <span class="cx-fill" aria-hidden="true"></span>
+                    <span class="cx-label">Tilaa siivous</span>
+                    <span class="cx-icon" aria-hidden="true"><ArrowRight size={16} weight="bold" className="cx-arrow" /></span>
+                  </a>
+                  <CtaButton href="#design-system" label="Tilaa siivous" size="sm" />
+                </div>
+                <a href="#design-system" class="press group/price -ml-3 flex items-baseline gap-1.5 rounded-full px-3 py-3 text-[15px] text-ink-soft transition-colors hover:bg-ink/[0.05] hover:text-ink">
+                  Hinnat alkaen <span class="font-semibold text-ink">43 €/h</span>
+                  <ArrowRight size={13} weight="bold" className="self-center transition-transform duration-200 ease-[var(--ease-out-strong)] group-hover/price:translate-x-0.5" />
                 </a>
               </div>
               <p class="text-[13px] leading-relaxed text-muted">
-                Paina nappia. Pää-CTA:ssa on yläreunaan osuva valoreuna, pehmeä kiilto yläpuoliskolla ja kolme
-                varjokerrosta. Painettaessa nappi laskee 2 px ja varjo lyhenee.
+                Vaalealla pohjalla: pää-CTA, navbarin pieni CTA levossa ja vierityksen jälkeen, sekä toissijainen
+                tekstilinkki. Vie hiiri napin päälle.
               </p>
             </div>
-            <div class="flex flex-col gap-2 rounded-[2rem] border border-line bg-white p-6">
-              <p class="text-[13px] font-semibold">Säännöt</p>
-              <ul class="flex flex-col gap-2 text-[13px] leading-relaxed text-muted">
-                <li>Yksi musta pää-CTA per näkymä. Navbarin “Tilaa siivous” on vaalea niin kauan kuin heron CTA näkyy, ja muuttuu mustaksi kun se vierii pois.</li>
-                <li>Nuoli kertoo, että nappi vie eteenpäin, ja liikkuu 2 px hoverissa.</li>
-                <li>Mobiilissa pää-CTA on koko levyinen ja varjot ovat lyhyemmät.</li>
-                <li>Kaikilla napeilla on :active-tila, eikä mikään nappi ole liikkumaton.</li>
-              </ul>
+            <div class="flex flex-col justify-between gap-8 rounded-[2rem] bg-ink p-6 text-white md:p-8">
+              <div class="flex flex-col items-start gap-5">
+                <CtaButton href="#design-system" label="Aloita varaus" variant="light" />
+                <button type="button" class="press group flex items-center gap-2 rounded-full bg-white py-3.5 pr-4 pl-6 text-[15px] font-medium text-ink">
+                  Tilaa
+                  <ArrowSwap />
+                </button>
+              </div>
+              <p class="text-[13px] leading-relaxed text-white/60">
+                Tummalla pohjalla: vaalea pää-CTA ja lomakkeen lähetysnappi, jonka nuoli pyyhkäisee hoverissa uuden
+                nuolen tilalle.
+              </p>
             </div>
+          </div>
+          <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <Rule title="Liike kertoo suunnan" text="Hoverissa pallo kasvaa nuolen kohdalta koko napin kokoiseksi luumuksi, ja nuoli kääntyy vinosta eteenpäin. Liike alkaa siitä kohdasta, johon katse jo osuu." />
+            <Rule title="Yksi pää-CTA kerrallaan" text="Navbarin pieni CTA on hiljainen niin kauan kuin heron CTA näkyy, ja muuttuu tummaksi, kun se vierii pois. Ruudulla on aina vain yksi tumma pää-CTA." />
+            <Rule title="Pilleri, aina" text="Kaikki napit ovat pillereitä. Mobiilissa ne eivät veny koko leveyteen. Kosketusnäytöllä ei ole hoveria, joten palautteen antaa painallus. Reduced motion vaihtaa värit ilman laajenemista." />
           </div>
 
           <div class="mt-14 grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -332,7 +343,7 @@ const grouped = Object.entries(
                 <p class="mb-6 font-mono text-[11px] text-white/50">Live · sanan rullaus kirjainten korkuisessa maskissa, 600 ms ease-in-out</p>
                 <p class="text-[36px] leading-[1.05] font-semibold tracking-[-0.035em] md:text-[52px]">
                   Siivoukset vaivattomasti
-                  <RotatingWord client:visible words={['kotiin.', 'Airbnb:hen.', 'muuttoon.']} className="text-[#d08cbb]" />
+                  <RotatingWord client:visible words={['kotiin.', 'Airbnb:hen.', 'muuttoon.']} className="text-plum-light" />
                 </p>
               </div>
               <div class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white">
@@ -392,7 +403,7 @@ const grouped = Object.entries(
                 <rect x="780" y="40" width="170" height="96" rx="18" fill="#fff" stroke="#e3e6eb"></rect>
                 <text x="800" y="76" font-weight="600" fill="#15171c">Selain</text>
                 <text x="800" y="98" fill="#6b717d" font-size="12.5">HTML heti</text>
-                <text x="800" y="116" fill="#6b717d" font-size="12.5">+ 3 pientä islandia</text>
+                <text x="800" y="116" fill="#6b717d" font-size="12.5">+ 4 pientä islandia</text>
 
                 <path d="M210 88H262M470 88H522M720 88H772" stroke="#6b717d" stroke-width="1.5" marker-end="url(#ah)"></path>
                 <text x="216" y="78" fill="#6b717d" font-size="11">webhook</text>
@@ -420,7 +431,7 @@ const grouped = Object.entries(
                   [
                     ['Sivun muodostus', 'PHP + sivurakentaja, välimuisti LiteSpeedillä', 'Valmis HTML buildissa'],
                     ['JavaScript', `${lh.current.jsKB} kt etusivulla`, `${lh.next.jsKB} kt, vain interaktiivisille osille`],
-                    ['Kaupunkisivut (12 kpl)', 'Jokainen erikseen Elementorissa', 'Yksi pohja ja datatiedosto, uusi kaupunki on rivi dataa'],
+                    ['Kaupunkisivut (11 kpl)', 'Jokainen erikseen Elementorissa', 'Yksi pohja ja datatiedosto, uusi kaupunki on rivi dataa'],
                     ['Ylläpito', 'WP-ydin, teema ja kymmenkunta lisäosaa päivitettävänä', 'Ei palvelinta. Riippuvuudet päivitetään koodissa'],
                     ['Tietoturva', 'Hallintapaneeli, lisäosat ja PHP julkisesti saatavilla', 'Staattiset tiedostot, ei hyökkäyspintaa sivulla'],
                     ['Design system', 'Tyylit Elementorin asetuksissa sivukohtaisesti', 'Tokenit ja komponentit yhdessä paikassa'],
@@ -475,7 +486,7 @@ const grouped = Object.entries(
           <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
             <Rule title="Koko etusivu, ei pelkkä hero" text="Ensimmäinen mittaus tehtiin, kun uudessa oli vain navbar ja hero (99). Nyt mukana on koko sivu kuvineen, ja simuloitu mobiilitulos on 90. Paikallisesti havaittu LCP on alle 0,1 s; simuloidun arvion nostavat fontit, herokuva ja islandien JavaScript." />
             <Rule title="Uusi mitattiin paikallisesti" text="Uusi build ajettiin localhostilla, nykyinen tuotannosta Cloudflaren takaa. Lighthouse simuloi molemmille saman hitaan mobiiliyhteyden, mutta palvelimen vasteaika jää pois. Reilu vertailu vaatii preview-julkaisun CDN:ään." />
-            <Rule title="Mitä tästä voi sanoa" text="Rakenne-ero on todellinen: valmis HTML ja kolme pientä islandia sivurakentajan noin tuhannen kilotavun JavaScriptin sijaan." />
+            <Rule title="Mitä tästä voi sanoa" text="Rakenne-ero on todellinen: valmis HTML ja neljä pientä islandia sivurakentajan noin tuhannen kilotavun JavaScriptin sijaan." />
           </div>
         </section>
 
