@@ -10,6 +10,7 @@ nykyisen WordPress-sivun tilalle.
 
 - `/` – etusivu
 - `/docs` – brändi, design system, liike, arkkitehtuuri, mittaukset, SEO ja GEO, integraatiot, CMS-siirtymä ja päätösloki
+- `/mahdollisuudet` – mitä uudistus voisi mahdollistaa Clevoylle: kolme liiketoiminnallista hypoteesia, mittarit, ensimmäinen kokeilu ja kysymykset Clevoylle
 - `/c-kaanto` – prototyyppi: ikkunamerkki kääntyy C:ksi (latausanimaatio)
 
 ## Tekniikka

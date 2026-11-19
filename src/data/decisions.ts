@@ -4,7 +4,7 @@
  */
 export type Decision = {
   date: string // ISO
-  area: 'Brändi' | 'Design' | 'Liike' | 'Arkkitehtuuri' | 'Sisältö' | 'Prosessi'
+  area: 'Tuote' | 'Brändi' | 'Design' | 'Liike' | 'Arkkitehtuuri' | 'Sisältö' | 'Prosessi'
   title: string
   why: string
   rejected?: string
@@ -356,5 +356,29 @@ export const decisions: Decision[] = [
     area: 'Arkkitehtuuri',
     title: 'CSS upotetaan sivuun, ja mittaus ajettiin koko etusivulle',
     why: 'Kun kaikki osiot ja kuvat olivat mukana, Lighthouse antoi 90 (aiemmin pelkälle herolle 99). LCP-elementti on otsikko, ja viiveen syy oli renderöinnin estävä CSS kahdessa tiedostossa. Upotettu CSS (noin 26 kt) poistaa pyynnöt ja nopeutti FCP:tä. Paikallisesti havaittu LCP on 61 ms.',
+  },
+  {
+    date: '2026-11-19',
+    area: 'Tuote',
+    title: 'Etusivu poistaa ostajan neljä epävarmuutta ennen ensimmäistä klikkausta',
+    why: 'Siivouksen ostaja kysyy ensin: paljonko maksaa, pääsenkö sopivaan aikaan, voinko luottaa ja toimiiko kaupungissani. Hero vastaa hintaan ja vaivaan, bento luottamukseen, palvelurivit kaupunkiin ja UKK lopuihin. Osio, jolle ei löydy kysymystä, ei kuulu sivulle.',
+  },
+  {
+    date: '2026-11-19',
+    area: 'Tuote',
+    title: 'Hinta ja kotitalousvähennys etusivulle, koska nykyinen sivu ei mainitse hintaa',
+    why: 'Hinta on yleisin syy jättää siivouksen ostaminen kesken, ja kotitalousvähennys muuttaa sen, miltä hinta tuntuu. Molemmat näkyvät ilman klikkausta. Tämä on hypoteesi H1, ja se testataan ensimmäisenä.',
+  },
+  {
+    date: '2026-11-19',
+    area: 'Tuote',
+    title: 'Palveluntarjoajat saavat oman osion, koska tarjonta rajaa kysyntää',
+    why: 'Clevoy on kaksipuolinen markkinapaikka: ilman siivoojia ei ole vapaita aikoja, eikä paraskaan etusivu tuota varauksia, jos ensimmäinen vapaa aika on kaukana. Osio puhuu yrittäjälle omalla kielellään ja näyttää työn sovelluksessa.',
+  },
+  {
+    date: '2026-11-19',
+    area: 'Tuote',
+    title: 'Docs erottaa todetun ja oletetun',
+    why: 'Tekniset hyödyt (ylläpito, tietoturva, kustannukset) on muotoiltu ehdotuksiksi, jotka vahvistetaan inventaariossa. SEO:n onnistumista mitataan varauksilla ja palveluntarjoajilla, ei sijoituksilla. Uskottava ehdotus kertoo myös, mitä ei vielä tiedetä.',
   },
 ]

@@ -107,6 +107,9 @@ const grouped = Object.entries(
             Lighthouse {lh.current.lighthouse}, mobiiliprofiili, mediaani {lh.current.runs} ajosta. Ehdot ja varaukset
             kohdassa <a href="#mittaukset" class="underline underline-offset-2 hover:text-white/70">Mittaukset</a>.
           </p>
+          <a href="/mahdollisuudet/" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-5 py-3 text-[14px] font-medium text-white transition-colors hover:bg-white/[0.14]">
+            Mitä uudistus voisi mahdollistaa Clevoylle <ArrowRight size={14} weight="bold" />
+          </a>
         </div>
       </div>
     </header>
@@ -432,10 +435,10 @@ const grouped = Object.entries(
                     ['Sivun muodostus', 'PHP + sivurakentaja, välimuisti LiteSpeedillä', 'Valmis HTML buildissa'],
                     ['JavaScript', `${lh.current.jsKB} kt etusivulla`, `${lh.next.jsKB} kt, vain interaktiivisille osille`],
                     ['Kaupunkisivut (11 kpl)', 'Jokainen erikseen Elementorissa', 'Yksi pohja ja datatiedosto, uusi kaupunki on rivi dataa'],
-                    ['Ylläpito', 'WP-ydin, teema ja kymmenkunta lisäosaa päivitettävänä', 'Ei palvelinta. Riippuvuudet päivitetään koodissa'],
-                    ['Tietoturva', 'Hallintapaneeli, lisäosat ja PHP julkisesti saatavilla', 'Staattiset tiedostot, ei hyökkäyspintaa sivulla'],
+                    ['Ylläpito', 'WP-ydin, teema ja kymmenkunta lisäosaa päivitettävänä', 'Ei omaa palvelinta. Riippuvuudet ja integraatiot tarvitsevat silti nimetyn ylläpitäjän'],
+                    ['Tietoturva', 'Hallintapaneeli, lisäosat ja PHP julkisesti saatavilla', 'Pienempi hyökkäyspinta: sivulla ei ajeta palvelinkoodia. Lomakkeet ja upotukset arvioidaan erikseen'],
                     ['Design system', 'Tyylit Elementorin asetuksissa sivukohtaisesti', 'Tokenit ja komponentit yhdessä paikassa'],
-                    ['Sisällön muokkaus', 'WP-admin, kenelle tahansa tuttu', 'Vaihe 1: sama WP-admin. Vaihe 2: Git-CMS'],
+                    ['Sisällön muokkaus', 'WP-admin, ulkoasua voi muuttaa itse Elementorilla', 'Tekstit ja artikkelit WP-adminissa kuten nyt. Uudet osiot ja ulkoasun muutokset vaativat kehittäjän'],
                   ].map(([k, a, b]) => (
                     <tr>
                       <td class="p-4 font-semibold">{k}</td>
@@ -451,6 +454,28 @@ const grouped = Object.entries(
             Miksi ei Next.js: se sopii, jos markkinointisivu ja varaussovellus halutaan samaan koodiin. Varaus asuu jo
             erillään osoitteessa app.clevoy.io, joten sisältösivulle riittää kevyempi työkalu.
           </p>
+
+          <h3 class="mt-12 mb-2 text-[15px] font-semibold">Vahvistetaan ennen päätöstä</h3>
+          <p class="mb-4 max-w-[70ch] text-[13.5px] leading-relaxed text-muted">
+            Rakenne-ero on todellinen, mutta tuotannossa nämä kysymykset ratkaisevat, onko vaihto järkevä. Jokaiselle on
+            ehdotus, ja ne vahvistetaan inventaariossa yhdessä Clevoyn kanssa.
+          </p>
+          <ul class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white text-[13.5px]">
+            {
+              [
+                ['Mitä tapahtuu, jos build epäonnistuu?', 'Staattinen hosting pitää edellisen onnistuneen version julki, joten sivu ei katoa. Epäonnistunut build hälyttää sähköpostiin, ja WordPressin julkaisu näkyy sivulla vasta seuraavassa onnistuneessa buildissa.'],
+                ['Kuka ylläpitää integraatioita ja riippuvuuksia?', 'Tarvitaan nimetty ylläpitäjä, kuten nytkin WordPressille. Ehdotus: riippuvuuspäivitykset automaattisina pull requesteina ja kuukausittainen tarkistus.'],
+                ['Toimivatko evästehallinta ja analytiikka?', 'CookieYes ja GTM upotetaan samoin kuin nyt. Ennen domainin vaihtoa tarkistetaan preview-osoitteessa, että suostumus estää tagit ja tapahtumat kirjautuvat samoilla nimillä.'],
+                ['Miten lomakkeet ja henkilötiedot hoidetaan?', 'Uutiskirje lähetetään suoraan Brevoon kuten nyt. Yhteydenottolomakkeelle palvelinfunktio, jossa roskapostisuoja ja nopeusrajoitus. Tiedot eivät tallennu sivulle, ja käsittely kirjataan tietosuojaselosteeseen.'],
+                ['Voiko Clevoy muokata sivua ilman teknistä apua?', 'Tekstit, artikkelit ja UKK kyllä, WP-adminissa. Uudet osiot ja ulkoasun muutokset vaativat kehittäjän, mikä on tämän mallin todellinen kustannus. Vaiheessa 2 Git-CMS antaa muokata myös osioiden sisältöä.'],
+              ].map(([q, a]) => (
+                <li class="grid grid-cols-1 gap-1 p-4 md:grid-cols-[300px_1fr] md:gap-6">
+                  <span class="font-semibold">{q}</span>
+                  <span class="text-muted">{a}</span>
+                </li>
+              ))
+            }
+          </ul>
         </section>
 
         <!-- ───────── 05 Mittaukset ───────── -->
@@ -492,10 +517,11 @@ const grouped = Object.entries(
 
         <!-- ───────── 06 SEO ja GEO ───────── -->
         <section id="seo" class="scroll-mt-8">
-          <SectionHead n="06" title="SEO ja GEO" accent="Löydettävissä haussa ja tekoälyn vastauksissa">
-            Hakukoneet ja tekoälyt, kuten ChatGPT, Perplexity ja Googlen AI-vastaukset, palkitsevat samoja asioita:
-            nopean sivun, selkeän rakenteen, luettavat vastaukset ja tiedon siitä, mitä palvelu on ja missä se
-            toimii. Etusivu on rakennettu niiden ympärille.
+          <SectionHead n="06" title="SEO ja GEO" accent="Näkyvyys on keino, varaukset ovat tavoite">
+            Hakukoneet ja tekoälyt, kuten ChatGPT, Perplexity ja Googlen AI-vastaukset, lukevat helpoimmin nopeaa sivua,
+            selkeää rakennetta ja lyhyitä vastauksia. Etusivu on rakennettu niiden ympärille. Rakenne ei silti takaa
+            näkyvyyttä tekoälyn vastauksissa, eikä näkyvyys yksin ole tavoite: mittari on se, tuoko liikenne
+            varauksia ja palveluntarjoajia.
           </SectionHead>
 
           <div class="overflow-x-auto rounded-[1.5rem] border border-line bg-white">
@@ -506,7 +532,7 @@ const grouped = Object.entries(
               <tbody class="divide-y divide-line">
                 {
                   [
-                    ['Linkit kaupunkisivuille', '0 / 12 kaupunkisivua', 'Kaikki 12 sekä palvelusivut, yhteensä 16 sisäistä linkkiä'],
+                    ['Linkit kaupunkisivuille', 'Ei linkkejä etusivulta', '11 palvelu × kaupunki -sivua ja 4 palvelusivua'],
                     ['Kysymykset ja vastaukset', 'Ei etusivulla', '6 kysymystä, vastaukset suoraan HTML:ssä'],
                     ['Rakenteinen data', 'Organization, WebSite, WebPage, Breadcrumb (The SEO Framework)', 'Organization, jossa palvelut ja 7 kaupunkia (areaServed), sekä WebSite ja FAQPage'],
                     ['Sivun muodostus', 'PHP ja sivurakentaja', 'Valmis HTML, jonka hakubotit ja tekoälyt lukevat ilman JavaScriptiä'],
@@ -525,8 +551,19 @@ const grouped = Object.entries(
 
           <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
             <Rule title="Paikallinen haku" text="”Kotisiivous Espoo” -tyyppiset haut tuovat tilauksia. Kun etusivulta linkitetään jokaiseen palvelu ja kaupunki -sivuun, hakukone ymmärtää, että sivut ovat tärkeitä, ja käyttäjä löytää oman kaupunkinsa yhdellä klikkauksella." />
-            <Rule title="Tekoälyn vastaukset" text="Tekoälyt poimivat lyhyitä, faktapohjaisia kysymys ja vastaus -pareja. UKK:n jokaisella vastauksella on lähde: hinnat Clevoyn omilta sivuilta ja kotitalousvähennys Verohallinnolta." />
+            <Rule title="Tekoälyn vastaukset" text="Lyhyet, faktapohjaiset kysymys ja vastaus -parit ovat tekoälylle helppoja lainata, mutta mikään ei takaa, että niitä lainataan. UKK:n vastauksilla on lähde: hinnat Clevoyn omilta sivuilta ja kotitalousvähennys Verohallinnolta." />
             <Rule title="Yksi totuuden lähde" text="Palvelut, kaupungit, UKK ja rakenteinen data tulevat samasta datatiedostosta. Kun uusi kaupunki lisätään, se päivittyy sivulle ja schemaan samalla kertaa." />
+          </div>
+
+          <h3 class="mt-12 mb-2 text-[15px] font-semibold">Mitä mitataan</h3>
+          <p class="mb-4 max-w-[70ch] text-[13.5px] leading-relaxed text-muted">
+            Hakusijoitukset kertovat vain puolet. Nämä mittarit kertovat, tuoko näkyvyys liiketoimintaa.
+          </p>
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <Rule title="Kaupunkisivujen liikenne ja konversio" text="Orgaaniset käynnit palvelu × kaupunki -sivuille ja se, kuinka moni niistä siirtyy varaukseen. Kertoo, toimiiko paikallinen haku." />
+            <Rule title="Varauspolku alusta loppuun" text="Klikkaukset app.clevoy.io:hon (UTM-tunnisteella) suhteessa kävijöihin, ja niistä loppuun asti tehdyt varaukset. Kertoo, missä kohtaa ostaja jää pois." />
+            <Rule title="Lähde suhteessa varauksiin" text="Orgaaninen haku, tekoälyviittaukset, mainonta ja suora liikenne erikseen. Kertoo, mistä laadukkaat varaukset oikeasti tulevat." />
+            <Rule title="Palveluntarjoajien liittyminen ja aktivointi" text="Liittymiset etusivun kautta ja se, kuinka moni saa ensimmäisen varauksen. Markkinapaikka tarvitsee vapaita aikoja yhtä paljon kuin ostajia." />
           </div>
 
           <h3 class="mt-12 mb-4 text-[15px] font-semibold">Seuraavaksi</h3>
@@ -586,8 +623,10 @@ const grouped = Object.entries(
             </table>
           </div>
           <p class="mt-3 text-[13px] text-muted">
-            Ainoa oikeasti uusi osa on yhteydenottolomakkeen lähetys. Muut ovat upotuksia, jotka siirtyvät
-            sivupohjaan, tai ominaisuuksia, joita staattinen sivu ei tarvitse.
+            Julkisen sivun perusteella yhteydenottolomakkeen lähetys näyttää ainoalta osalta, joka pitää rakentaa
+            uudelleen. Muut ovat upotuksia, jotka siirtyvät sivupohjaan, tai ominaisuuksia, joita staattinen sivu ei
+            tarvitse. Tämä vahvistetaan inventaariossa hallintapaneelista käsin, koska kaikki lisäosat eivät näy
+            julkiseen HTML:ään.
           </p>
         </section>
 
@@ -648,7 +687,7 @@ const grouped = Object.entries(
               decisions.map((d) => (
                 <li class="grid grid-cols-1 gap-2 p-5 md:grid-cols-[120px_1fr] md:gap-6">
                   <div class="flex items-center gap-2 md:flex-col md:items-start md:gap-1">
-                    <span class="rounded-full bg-mist-soft px-2.5 py-0.5 text-[11px] font-medium">{d.area}</span>
+                    <span class={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ${d.area === 'Tuote' ? 'bg-plum-soft text-plum' : 'bg-mist-soft'}`}>{d.area}</span>
                     <span class="font-mono text-[11px] text-muted">{d.date.split('-').reverse().join('.')}</span>
                   </div>
                   <div>
@@ -665,7 +704,10 @@ const grouped = Object.entries(
         <footer class="flex flex-col items-start justify-between gap-4 border-t border-line pt-8 text-[13px] text-muted md:flex-row md:items-center">
           <Logo variant="ikkuna" size={16} />
           <p>Konseptiehdotus. Ei Clevoy Oy:n virallista materiaalia.</p>
-          <a href="/" class="inline-flex items-center gap-1 text-ink hover:underline">Katso etusivu <ArrowUpRight size={13} /></a>
+          <span class="flex gap-5">
+            <a href="/mahdollisuudet/" class="inline-flex items-center gap-1 text-ink hover:underline">Mahdollisuudet <ArrowUpRight size={13} /></a>
+            <a href="/" class="inline-flex items-center gap-1 text-ink hover:underline">Katso etusivu <ArrowUpRight size={13} /></a>
+          </span>
         </footer>
       </main>
     </div>
