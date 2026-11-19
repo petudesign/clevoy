@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro'
+import Hero from '../components/Hero.astro'
+import HowItWorks from '../components/HowItWorks.astro'
+import Features from '../components/Features.astro'
+import ServiceAreas from '../components/ServiceAreas.astro'
+import Faq from '../components/Faq.astro'
+import Providers from '../components/Providers.astro'
+import Footer from '../components/Footer.astro'
+import { org, faq, serviceCities, allCities } from '../data/site'
+import { Nav } from '../components/Nav'
+import { ChatLauncher } from '../components/ChatLauncher'
+
+// Structured data for search engines and AI answer engines.
+// No AggregateRating here: Google ignores self-hosted ratings of your own business.
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: org.name,
+    legalName: org.legalName,
+    url: org.url,
+    logo: `${org.url}/favicon.svg`,
+    sameAs: org.sameAs,
+    areaServed: allCities.map((c) => ({ '@type': 'City', name: c })),
+    makesOffer: serviceCities.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.service, serviceType: s.service, url: `${org.url}/${s.slug}/` },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: org.name,
+    url: org.url,
+    inLanguage: 'fi',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+]
+---
+
+<Base title="Clevoy – Siivous vaivattomasti kotiin, Airbnb:hen ja muuttoon">
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <div class="min-h-[100dvh] overflow-x-clip">
+    <Nav client:load />
+    <main>
+      <Hero />
+      <HowItWorks />
+      <Features />
+      <ServiceAreas />
+      <Faq />
+      <Providers />
+    </main>
+    <Footer />
+  </div>
+  <ChatLauncher client:idle />
+</Base>

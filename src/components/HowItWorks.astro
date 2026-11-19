@@ -1,0 +1,59 @@
+---
+/**
+ * "Näin se toimii" – compact dark panel: heading left, steps right.
+ * The steps sit on ONE timeline: a single track with a node per step. When the row
+ * scrolls into view the track fills left → right, each node lights as the fill passes it,
+ * and the last node keeps a live pulse ("siivous käynnissä") like the tracking tile.
+ * Horizontal from sm, vertical beside the steps on phones. Compact: about as tall as the heading.
+ * Step copy is Clevoy's own from clevoy.io, tightened for a compact row.
+ */
+import CtaButton from './CtaButton.astro'
+
+const steps = [
+  { title: 'Anna kohteen tiedot', text: 'Osoite, pinta-ala ja palvelu. Lisäpalvelut ja toiveet siivoojalle mukaan.' },
+  { title: 'Varaa sopiva aika', text: 'Näet kokonaishinnan, arvostelut ja vapaat ajat ennen kuin vahvistat.' },
+  { title: 'Vahvista ja seuraa', text: 'Seuraat siivousta reaaliajassa ja voit viestiä siivoojan kanssa.' },
+]
+---
+
+<section id="miten" aria-labelledby="miten-otsikko" class="scroll-mt-24 px-3 md:px-4">
+  <div class="relative overflow-hidden rounded-[2rem] bg-ink text-white md:rounded-[2.5rem]">
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_70%_at_0%_0%,rgba(184,103,159,0.22),transparent_70%)]"
+    >
+    </div>
+
+    <div
+      class="relative mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-5 py-12 md:px-8 md:py-14 lg:grid-cols-[0.8fr_1.6fr] lg:items-center lg:gap-14"
+    >
+      <div>
+        <h2 id="miten-otsikko" class="text-[32px] leading-[1.05] font-semibold tracking-[-0.03em] md:text-[40px]">
+          Kolme vaihetta<br /><span class="text-[#d08cbb]">helpompaan arkeen</span>
+        </h2>
+        <div class="mt-6"><CtaButton href="https://app.clevoy.io/" label="Aloita varaus" variant="light" /></div>
+      </div>
+
+      <ol class="timeline relative grid grid-cols-1 gap-8 pl-7 sm:grid-cols-3 sm:gap-5 sm:pl-0" data-reveal-item>
+        {/* One track through all steps: horizontal from sm, vertical on phones */}
+        <span aria-hidden="true" class="tl-track"><span class="tl-fill"></span></span>
+        {
+          steps.map((s, i) => (
+            <li class="relative sm:pt-8" style={`--n:${i}`}>
+              <span aria-hidden="true" class={`tl-node ${i === steps.length - 1 ? 'tl-node--live' : ''}`} />
+              <p class="font-mono text-[12px] text-white/45" aria-hidden="true">
+                {i + 1}/{steps.length}
+              </p>
+              <h3 class="mt-1 text-[18px] font-semibold tracking-[-0.01em]">{s.title}</h3>
+              <p class="mt-1.5 text-[14.5px] leading-relaxed text-white/60">{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/reveal'
+</script>

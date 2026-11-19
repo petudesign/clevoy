@@ -1,0 +1,8 @@
+---
+interface Props { q: string; a: string }
+const { q, a } = Astro.props
+---
+<div class="rounded-[1.75rem] bg-plum-soft p-6 md:p-7">
+  <p class="text-[16px] font-semibold tracking-tight text-ink">{q}</p>
+  <p class="mt-2 text-[14px] leading-relaxed text-ink-soft">{a}</p>
+</div>

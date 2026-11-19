@@ -1,0 +1,662 @@
+---
+/**
+ * /docs – brand kit, design system, architecture and migration plan in one page.
+ * Doubles as raw material for the case study. All data lives in src/data/*.
+ * Only the live demos are islands; everything else is static HTML.
+ */
+import Base from '../layouts/Base.astro'
+import { Logo, WindowMark, WindowMarkSoft, ClevoyMark } from '../components/Logo'
+import { LogoColorways, LogoDirections } from '../components/BrandSheets'
+import { RotatingWord } from '../components/RotatingWord'
+import { PhoneDemo } from '../components/PhoneDemo'
+import { colors, typeScale, radii, motion } from '../data/tokens'
+import { decisions } from '../data/decisions'
+import lh from '../data/lighthouse.json'
+import { integrations } from '../data/integrations'
+import SectionHead from '../components/docs/SectionHead.astro'
+import Rule from '../components/docs/Rule.astro'
+import Faq from '../components/docs/Faq.astro'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  House,
+  Truck,
+  Key,
+  Briefcase,
+  Buildings,
+  CalendarCheck,
+  Star,
+  ShieldCheck,
+} from '@phosphor-icons/react'
+
+const sec = (ms: number) => (ms / 1000).toLocaleString('fi-FI', { maximumFractionDigits: 1 })
+const toc = [
+  ['brandi', 'Brändi'],
+  ['design-system', 'Design system'],
+  ['liike', 'Liike'],
+  ['arkkitehtuuri', 'Arkkitehtuuri'],
+  ['mittaukset', 'Mittaukset'],
+  ['seo', 'SEO ja GEO'],
+  ['integraatiot', 'Integraatiot'],
+  ['siirtyma', 'CMS ja siirtymä'],
+  ['paatokset', 'Päätösloki'],
+]
+const stats = [
+  { label: 'Lighthouse, suorituskyky', before: `${lh.current.scores.performance}`, after: `${lh.next.scores.performance}`, unit: '/100' },
+  { label: 'Suurin sisältö näkyvissä (LCP)', before: sec(lh.current.lcp), after: sec(lh.next.lcp), unit: 's' },
+  { label: 'JavaScript', before: `${lh.current.jsKB}`, after: `${lh.next.jsKB}`, unit: 'kt' },
+  { label: 'Pyyntöjä sivulatauksessa', before: `${lh.current.requests}`, after: `${lh.next.requests}`, unit: '' },
+]
+const grouped = Object.entries(
+  colors.reduce<Record<string, typeof colors>>((a, c) => ((a[c.group] ??= []).push(c), a), {}),
+)
+---
+
+<Base title="Clevoy · Uudistuksen docs" description="Brändi, design system, arkkitehtuuri ja siirtymäsuunnitelma.">
+  <div class="overflow-x-clip pb-24">
+    <!-- ───────── Cover ───────── -->
+    <header class="px-3 pt-3 md:px-4 md:pt-4">
+      <div class="reveal relative overflow-hidden rounded-[2rem] bg-ink text-white md:rounded-[2.5rem]">
+        <div
+          class="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_85%_0%,rgba(184,103,159,0.35),transparent_70%),radial-gradient(50%_50%_at_0%_100%,rgba(199,212,234,0.12),transparent_70%)]"
+        >
+        </div>
+        <div class="relative mx-auto max-w-[1240px] px-5 pt-6 pb-10 md:px-10 md:pt-8 md:pb-14">
+          <div class="flex items-center justify-between gap-4">
+            <Logo variant="ikkuna" size={20} tone="dark" />
+            <span class="rounded-full border border-white/15 px-3 py-1.5 font-mono text-[11px] text-white/60">
+              v0.1 · 18.11.2026
+            </span>
+          </div>
+
+          <div class="mt-16 grid grid-cols-1 gap-10 md:mt-24 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+            <div>
+              <p class="mb-5 text-[13px] text-white/60">Konseptiehdotus</p>
+              <h1 class="text-[40px] leading-[1.02] font-semibold tracking-[-0.035em] sm:text-[56px] lg:text-[76px]">
+                Sama palvelu.<br />
+                <span class="text-[#d08cbb]">Uusi ilme</span> ja nopeampi pohja.
+              </h1>
+            </div>
+            <p class="max-w-[44ch] text-[16px] leading-relaxed text-white/65">
+              Tässä on koko uudistus yhdellä sivulla: logo ja värit, design system, liikkeen periaatteet, uusi
+              tekninen pohja mittauksineen ja suunnitelma, jolla siirtymä nykyisestä WordPressistä tehdään
+              ilman katkoja.
+            </p>
+          </div>
+
+          <div class="mt-12 grid grid-cols-2 gap-2 md:mt-16 lg:grid-cols-4">
+            {
+              stats.map((s, i) => (
+                <div class={`rounded-[1.5rem] p-5 md:p-6 ${i === 0 ? 'bg-[#f6f1f4] text-ink' : 'bg-white/[0.06] text-white'}`}>
+                  <p class="flex items-baseline gap-2">
+                    <span class={`font-mono text-[14px] line-through ${i === 0 ? 'text-muted' : 'text-white/40'}`}>{s.before}</span>
+                    <ArrowRight size={12} className="opacity-40" />
+                  </p>
+                  <p class="mt-1 text-[38px] leading-none font-semibold tracking-[-0.04em] md:text-[48px]">
+                    {s.after}
+                    <span class={`ml-1 text-[16px] font-medium tracking-normal ${i === 0 ? 'text-muted' : 'text-white/50'}`}>{s.unit}</span>
+                  </p>
+                  <p class={`mt-4 text-[12.5px] ${i === 0 ? 'text-ink-soft' : 'text-white/55'}`}>{s.label}</p>
+                </div>
+              ))
+            }
+          </div>
+          <p class="mt-4 text-[12px] text-white/40">
+            Lighthouse {lh.current.lighthouse}, mobiiliprofiili, mediaani {lh.current.runs} ajosta. Ehdot ja varaukset
+            kohdassa <a href="#mittaukset" class="underline underline-offset-2 hover:text-white/70">Mittaukset</a>.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-4 pt-14 md:px-8 lg:grid-cols-[180px_1fr] lg:gap-14 lg:pt-20">
+      <!-- ───────── TOC ───────── -->
+      <nav aria-label="Sisällys" class="hidden lg:block">
+        <ol class="sticky top-8 flex flex-col gap-1 text-[13.5px]">
+          {
+            toc.map(([id, label], i) => (
+              <li>
+                <a href={`#${id}`} class="flex gap-3 rounded-lg px-2 py-1.5 text-ink-soft transition-colors hover:bg-ink/[0.04] hover:text-ink">
+                  <span class="font-mono text-[11px] text-muted">0{i + 1}</span>
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <main class="flex min-w-0 flex-col gap-24 md:gap-32">
+        <!-- ───────── 01 Brändi ───────── -->
+        <section id="brandi" class="scroll-mt-8">
+          <SectionHead n="01" title="Brändi" accent="Ikkuna, joka kertoo palvelun">
+            Merkki on kaari-ikkuna. Se viittaa kotiin ja juuri pestyyn ikkunaan, ja yksi valaistu ruutu muistuttaa
+            varattua aikaa kalenterissa. Moppi ja sanko jäivät pois, samoin geneerinen startup-abstraktio.
+          </SectionHead>
+
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-[1.35fr_1fr]">
+            <div class="relative grid min-h-[320px] place-items-center overflow-hidden rounded-[2rem] bg-plum-soft p-10">
+              <Logo variant="ikkuna" size={64} />
+              <span class="absolute bottom-5 left-6 font-mono text-[11px] text-plum">Päälogo · tummalla vaalealle</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="grid aspect-square place-items-center rounded-[2rem] bg-ink">
+                <ClevoyMark size={72} tone="dark" />
+              </div>
+              <div class="grid aspect-square place-items-center rounded-[2rem] bg-plum">
+                <WindowMarkSoft size={72} ink="#ffffff" accent="#ecc6dc" />
+              </div>
+              <div class="col-span-2 flex items-center justify-between gap-4 rounded-[2rem] border border-line bg-white p-6">
+                <div>
+                  <p class="text-[14px] font-semibold">Sovellusikoni ja favicon</p>
+                  <p class="text-[12.5px] text-muted">Sama muoto kaikissa koissa, hehku vain yli 24 px</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="grid size-14 place-items-center rounded-[16px] bg-ink shadow-[0_10px_20px_-10px_rgba(21,23,28,0.6)]">
+                    <ClevoyMark size={30} tone="dark" />
+                  </span>
+                  <WindowMark size={24} />
+                  <WindowMark size={16} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <Rule title="Suoja-alue" text="Logon ympärille jätetään vähintään merkin leveyden verran tyhjää." />
+            <Rule title="Koot" text="Muoto on kaikissa koissa sama pyöristetty ikkuna. Yli 24 px mukana ovat valogradientti ja luumuruudun hehku, 24 px ja alle merkki on yksivärinen, jotta se pysyy terävänä. Minimikoko 16 px." />
+            <Rule title="Kohdistus" text="Merkin alareuna asettuu tekstin peruslinjalle. Laatikoiden keskitys ei riitä, koska merkki on kirjaimia korkeampi." />
+          </div>
+
+          <h3 class="mt-16 mb-2 text-[20px] font-semibold tracking-tight">Värivaihtoehdot</h3>
+          <p class="mb-6 max-w-[62ch] text-[14.5px] leading-relaxed text-muted">
+            Ensimmäinen versio käytti tummaa luumua, joka 16 px:ssä sulautui runkoon ja näytti harmaalta. Kirkas luumu
+            on sama sävy vaaleampana.
+          </p>
+          <LogoColorways />
+
+          <h3 class="mt-16 mb-2 text-[20px] font-semibold tracking-tight">Kuusi suuntaa</h3>
+          <p class="mb-6 max-w-[62ch] text-[14.5px] leading-relaxed text-muted">
+            Kaikki suunnat on piirretty 24 yksikön ruudukolle ilman jäljitettyjä referenssejä. Puolet esittää idean
+            kuvana, ja jokainen testattiin faviconin koossa ennen valintaa.
+          </p>
+          <LogoDirections />
+        </section>
+
+        <!-- ───────── 02 Design system ───────── -->
+        <section id="design-system" class="scroll-mt-8">
+          <SectionHead n="02" title="Design system" accent="Viileät neutraalit, luumu ja lämmin aprikoosi">
+            Kaikki harmaat ovat samaa viileää perhettä. Luumu on brändiväri: logo, korostettu teksti, valitut tilat ja
+            CTA:n hover. Aprikoosi on lämmin tukiväri pinnoille, joilla tuotetta esitellään (bento-näyttämöt, UKK:n
+            pallot), ja se tuo kylmään paletiin vähän kodin lämpöä. Aprikoosi ei koskaan ole tekstin tai napin väri.
+            Puhdasta mustaa ei käytetä missään. Tokenit ovat CSS-muuttujina tiedostossa <code class="font-mono text-[13px]">global.css</code> ja
+            datana tiedostossa <code class="font-mono text-[13px]">tokens.ts</code>.
+          </SectionHead>
+
+          <h3 class="mb-4 text-[15px] font-semibold">Värit</h3>
+          <div class="flex flex-col gap-6">
+            {
+              grouped.map(([group, list]) => (
+                <div>
+                  <p class="mb-2 text-[12px] font-medium text-muted">{group}</p>
+                  <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                    {list.map((c) => (
+                      <div class="overflow-hidden rounded-[1.25rem] border border-line bg-white">
+                        <div class="h-20" style={`background:${c.hex}`} />
+                        <div class="p-3">
+                          <p class="flex items-baseline justify-between gap-2 text-[13px] font-semibold">
+                            {c.name}
+                            <span class="font-mono text-[11px] font-normal text-muted">{c.hex}</span>
+                          </p>
+                          <p class="mt-1 text-[11.5px] leading-snug text-muted">{c.use}</p>
+                          <p class="mt-2 font-mono text-[10.5px] text-ink-soft">{c.contrast}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+
+          <h3 class="mt-14 mb-4 text-[15px] font-semibold">Typografia · Geist ja Geist Mono</h3>
+          <div class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white">
+            {
+              typeScale.map((t) => (
+                <div class="grid grid-cols-1 gap-2 p-5 md:grid-cols-[160px_1fr] md:items-baseline md:gap-6">
+                  <div>
+                    <p class="text-[13px] font-semibold">{t.name}</p>
+                    <p class="font-mono text-[11px] text-muted">{t.spec}</p>
+                    <p class="font-mono text-[11px] text-muted">mobiili {t.mobile} px</p>
+                  </div>
+                  <p
+                    class:list={[
+                      'min-w-0 truncate text-ink',
+                      t.name === 'Display' && 'text-[40px] leading-[1.02] font-semibold tracking-[-0.035em] md:text-[56px]',
+                      t.name === 'H2' && 'text-[30px] leading-[1.1] font-semibold tracking-[-0.03em] md:text-[40px]',
+                      t.name === 'H3' && 'text-[20px] font-semibold tracking-[-0.01em]',
+                      t.name === 'Body L' && 'text-[17px] text-muted',
+                      t.name === 'Body' && 'text-[15px] text-muted',
+                      t.name === 'Mono' && 'font-mono text-[14px]',
+                    ]}
+                  >
+                    {t.sample}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+          <p class="mt-3 text-[13px] text-muted">
+            Hinnat, kellonajat ja muut luvut ladotaan aina monospace-fontilla, jotta ne pysyvät linjassa.
+          </p>
+
+          <h3 class="mt-14 mb-4 text-[15px] font-semibold">Napit</h3>
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-[1.3fr_1fr]">
+            <div class="flex flex-col justify-between gap-10 rounded-[2rem] bg-canvas p-8 shadow-[inset_0_0_0_1px_var(--color-line)]">
+              <div class="flex flex-wrap items-center gap-4">
+                <a href="#design-system" class="btn-3d group flex items-center gap-2.5 rounded-full py-3.5 pr-4 pl-6 text-[15px] font-medium text-white">
+                  Tilaa siivous
+                  <span class="grid size-7 place-items-center rounded-full bg-white/12 transition-transform duration-200 ease-[var(--ease-out-strong)] group-hover:translate-x-0.5">
+                    <ArrowRight size={14} weight="bold" />
+                  </span>
+                </a>
+                <a href="#design-system" class="btn-3d btn-3d--sm group flex items-center gap-2 rounded-full py-2.5 pr-3 pl-4 text-[14px] font-medium text-white">
+                  Pieni
+                  <span class="grid size-6 place-items-center rounded-full bg-white/12"><ArrowRight size={13} weight="bold" /></span>
+                </a>
+                <a href="#design-system" class="press rounded-full px-5 py-3.5 text-[15px] font-medium text-ink-soft hover:bg-ink/[0.05] hover:text-ink">
+                  Toissijainen
+                </a>
+              </div>
+              <p class="text-[13px] leading-relaxed text-muted">
+                Paina nappia. Pää-CTA:ssa on yläreunaan osuva valoreuna, pehmeä kiilto yläpuoliskolla ja kolme
+                varjokerrosta. Painettaessa nappi laskee 2 px ja varjo lyhenee.
+              </p>
+            </div>
+            <div class="flex flex-col gap-2 rounded-[2rem] border border-line bg-white p-6">
+              <p class="text-[13px] font-semibold">Säännöt</p>
+              <ul class="flex flex-col gap-2 text-[13px] leading-relaxed text-muted">
+                <li>Yksi musta pää-CTA per näkymä. Navbarin “Tilaa siivous” on vaalea niin kauan kuin heron CTA näkyy, ja muuttuu mustaksi kun se vierii pois.</li>
+                <li>Nuoli kertoo, että nappi vie eteenpäin, ja liikkuu 2 px hoverissa.</li>
+                <li>Mobiilissa pää-CTA on koko levyinen ja varjot ovat lyhyemmät.</li>
+                <li>Kaikilla napeilla on :active-tila, eikä mikään nappi ole liikkumaton.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-14 grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div>
+              <h3 class="mb-4 text-[15px] font-semibold">Pyöristykset</h3>
+              <div class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white">
+                {
+                  radii.map((r) => (
+                    <div class="flex items-center gap-4 p-4">
+                      <span class="size-10 shrink-0 border-2 border-ink/80 bg-mist-soft" style={`border-radius:min(${r.value}, 20px)`} />
+                      <span class="flex-1">
+                        <span class="block text-[13px] font-semibold">{r.name}</span>
+                        <span class="block text-[12px] text-muted">{r.use}</span>
+                      </span>
+                      <span class="font-mono text-[11px] text-ink-soft">{r.value}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+            <div>
+              <h3 class="mb-4 text-[15px] font-semibold">Ikonit · Phosphor duotone</h3>
+              <div class="grid grid-cols-4 gap-2">
+                {
+                  [House, Truck, Key, Briefcase, Buildings, CalendarCheck, Star, ShieldCheck].map((I) => (
+                    <span class="grid aspect-square place-items-center rounded-[1.25rem] border border-line bg-white text-ink">
+                      <I size={26} weight="duotone" />
+                    </span>
+                  ))
+                }
+              </div>
+              <p class="mt-3 text-[13px] text-muted">Ei emojeja. Ikonit ovat aina samaa sarjaa ja samalla painolla.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 03 Liike ───────── -->
+        <section id="liike" class="scroll-mt-8">
+          <SectionHead n="03" title="Liike" accent="Nopea, syy-seuraus näkyvissä">
+            Liike noudattaa Emil Kowalskin periaatteita: vahva ease-out kaikelle, mikä ilmestyy, lyhyet kestot ja
+            sulkeminen aina avaamista nopeampi. Kaikki triggerillä avautuva kasvaa triggeristään, ja vain transformia
+            ja opacityä animoidaan.
+          </SectionHead>
+
+          <div class="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_300px]">
+            <div class="flex flex-col gap-3">
+              <div class="rounded-[2rem] bg-ink p-8 text-white md:p-10">
+                <p class="mb-6 font-mono text-[11px] text-white/50">Live · sanan rullaus kirjainten korkuisessa maskissa, 600 ms ease-in-out</p>
+                <p class="text-[36px] leading-[1.05] font-semibold tracking-[-0.035em] md:text-[52px]">
+                  Siivoukset vaivattomasti
+                  <RotatingWord client:visible words={['kotiin.', 'Airbnb:hen.', 'muuttoon.']} className="text-[#d08cbb]" />
+                </p>
+              </div>
+              <div class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white">
+                {
+                  motion.map((m) => (
+                    <div class="grid grid-cols-1 gap-1 p-4 md:grid-cols-[170px_220px_1fr] md:items-baseline md:gap-4">
+                      <span class="text-[13px] font-semibold">{m.name}</span>
+                      <span class="font-mono text-[11px] text-ink-soft">{m.value}</span>
+                      <span class="text-[12.5px] text-muted">{m.use}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="flex flex-col items-center gap-3 rounded-[2rem] bg-mist-soft p-6">
+              <p class="self-start font-mono text-[11px] text-ink-soft">Live · varausflow</p>
+              <div class="w-full max-w-[250px]"><PhoneDemo client:visible /></div>
+              <p class="text-center text-[12px] leading-relaxed text-ink-soft">
+                Dynamic Island laajenee vahvistukseksi jousella. Mockup itse ei liiku.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ───────── 04 Arkkitehtuuri ───────── -->
+        <section id="arkkitehtuuri" class="scroll-mt-8">
+          <SectionHead n="04" title="Arkkitehtuuri" accent="Valmis HTML, JavaScript vain siellä missä on liikettä">
+            Nykyinen sivu renderöidään WordPressissä Elementor Pron sivurakentajalla jokaisella käynnillä tai
+            välimuistista. Uusi sivu rakennetaan Astrolla valmiiksi HTML-tiedostoiksi, jotka jaetaan CDN:stä.
+            Interaktiiviset osat, kuten valikot ja puhelindemo, ovat React-islandeja, jotka latautuvat vasta kun niitä
+            tarvitaan.
+          </SectionHead>
+
+          <div class="rounded-[2rem] border border-line bg-white p-4 md:p-8">
+            <svg viewBox="0 0 960 300" class="h-auto w-full" role="img" aria-label="Arkkitehtuurikaavio: sisältö WordPressistä tai CMS:stä buildiin, build CDN:ään, CDN selaimeen, varaus erillisessä sovelluksessa">
+              <defs>
+                <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0 0 10 5 0 10z" fill="#6b717d"></path>
+                </marker>
+              </defs>
+              <g font-family="Geist Variable, sans-serif" font-size="14">
+                <rect x="10" y="40" width="200" height="96" rx="18" fill="#f1e8ee"></rect>
+                <text x="30" y="76" font-weight="600" fill="#15171c">Sisältö</text>
+                <text x="30" y="98" fill="#6b717d" font-size="12.5">WordPress-admin (vaihe 1)</text>
+                <text x="30" y="116" fill="#6b717d" font-size="12.5">tai Git-CMS (vaihe 2)</text>
+
+                <rect x="270" y="40" width="200" height="96" rx="18" fill="#15171c"></rect>
+                <text x="290" y="76" font-weight="600" fill="#fff">Astro-build</text>
+                <text x="290" y="98" fill="#ffffffa0" font-size="12.5">sivupohjat + data</text>
+                <text x="290" y="116" fill="#ffffffa0" font-size="12.5">→ staattinen HTML</text>
+
+                <rect x="530" y="40" width="190" height="96" rx="18" fill="#e6ecf6"></rect>
+                <text x="550" y="76" font-weight="600" fill="#15171c">CDN</text>
+                <text x="550" y="98" fill="#6b717d" font-size="12.5">Cloudflare Pages</text>
+                <text x="550" y="116" fill="#6b717d" font-size="12.5">tai Netlify / Vercel</text>
+
+                <rect x="780" y="40" width="170" height="96" rx="18" fill="#fff" stroke="#e3e6eb"></rect>
+                <text x="800" y="76" font-weight="600" fill="#15171c">Selain</text>
+                <text x="800" y="98" fill="#6b717d" font-size="12.5">HTML heti</text>
+                <text x="800" y="116" fill="#6b717d" font-size="12.5">+ 3 pientä islandia</text>
+
+                <path d="M210 88H262M470 88H522M720 88H772" stroke="#6b717d" stroke-width="1.5" marker-end="url(#ah)"></path>
+                <text x="216" y="78" fill="#6b717d" font-size="11">webhook</text>
+
+                <rect x="780" y="196" width="170" height="80" rx="18" fill="#7a4a6e"></rect>
+                <text x="800" y="230" font-weight="600" fill="#fff">app.clevoy.io</text>
+                <text x="800" y="252" fill="#ffffffb0" font-size="12.5">varaus, ennallaan</text>
+                <path d="M865 136V188" stroke="#6b717d" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#ah)"></path>
+                <text x="872" y="168" fill="#6b717d" font-size="11">Tilaa siivous</text>
+
+                <rect x="10" y="196" width="460" height="80" rx="18" fill="#f5f6f8"></rect>
+                <text x="30" y="230" font-weight="600" fill="#15171c">Säilyvät palvelut</text>
+                <text x="30" y="252" fill="#6b717d" font-size="12.5">Brevo-uutiskirje · Trustmary-arviot · GTM · evästeet</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="mt-3 overflow-x-auto rounded-[1.5rem] border border-line bg-white">
+            <table class="w-full min-w-[640px] text-left text-[13px]">
+              <thead class="bg-canvas text-[12px] text-muted">
+                <tr><th class="p-4 font-medium"></th><th class="p-4 font-medium">Nyt: WordPress + Elementor Pro</th><th class="p-4 font-medium">Ehdotus: Astro + islandit</th></tr>
+              </thead>
+              <tbody class="divide-y divide-line">
+                {
+                  [
+                    ['Sivun muodostus', 'PHP + sivurakentaja, välimuisti LiteSpeedillä', 'Valmis HTML buildissa'],
+                    ['JavaScript', `${lh.current.jsKB} kt etusivulla`, `${lh.next.jsKB} kt, vain interaktiivisille osille`],
+                    ['Kaupunkisivut (12 kpl)', 'Jokainen erikseen Elementorissa', 'Yksi pohja ja datatiedosto, uusi kaupunki on rivi dataa'],
+                    ['Ylläpito', 'WP-ydin, teema ja kymmenkunta lisäosaa päivitettävänä', 'Ei palvelinta. Riippuvuudet päivitetään koodissa'],
+                    ['Tietoturva', 'Hallintapaneeli, lisäosat ja PHP julkisesti saatavilla', 'Staattiset tiedostot, ei hyökkäyspintaa sivulla'],
+                    ['Design system', 'Tyylit Elementorin asetuksissa sivukohtaisesti', 'Tokenit ja komponentit yhdessä paikassa'],
+                    ['Sisällön muokkaus', 'WP-admin, kenelle tahansa tuttu', 'Vaihe 1: sama WP-admin. Vaihe 2: Git-CMS'],
+                  ].map(([k, a, b]) => (
+                    <tr>
+                      <td class="p-4 font-semibold">{k}</td>
+                      <td class="p-4 text-muted">{a}</td>
+                      <td class="p-4">{b}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-[13px] text-muted">
+            Miksi ei Next.js: se sopii, jos markkinointisivu ja varaussovellus halutaan samaan koodiin. Varaus asuu jo
+            erillään osoitteessa app.clevoy.io, joten sisältösivulle riittää kevyempi työkalu.
+          </p>
+        </section>
+
+        <!-- ───────── 05 Mittaukset ───────── -->
+        <section id="mittaukset" class="scroll-mt-8">
+          <SectionHead n="05" title="Mittaukset" accent="Luvut, ja mitä ne eivät vielä kerro">
+            Molemmat sivut mitattiin Lighthousella samalla koneella mobiiliprofiililla, kolme ajoa kummallekin.
+            Taulukossa on mediaani.
+          </SectionHead>
+          <div class="overflow-x-auto rounded-[1.5rem] border border-line bg-white">
+            <table class="w-full min-w-[560px] text-left text-[13px]">
+              <thead class="bg-canvas text-[12px] text-muted">
+                <tr><th class="p-4 font-medium">Mittari</th><th class="p-4 font-medium">clevoy.io nyt</th><th class="p-4 font-medium">Uusi etusivu</th></tr>
+              </thead>
+              <tbody class="divide-y divide-line font-mono">
+                {
+                  [
+                    ['Suorituskyky', lh.current.scores.performance, lh.next.scores.performance],
+                    ['Saavutettavuus', lh.current.scores.accessibility, lh.next.scores.accessibility],
+                    ['Parhaat käytännöt', lh.current.scores['best-practices'], lh.next.scores['best-practices']],
+                    ['SEO', lh.current.scores.seo, lh.next.scores.seo],
+                    ['First Contentful Paint', `${sec(lh.current.fcp)} s`, `${sec(lh.next.fcp)} s`],
+                    ['Largest Contentful Paint', `${sec(lh.current.lcp)} s`, `${sec(lh.next.lcp)} s`],
+                    ['Total Blocking Time', `${Math.round(lh.current.tbt)} ms`, `${Math.round(lh.next.tbt)} ms`],
+                    ['Siirretty data', `${lh.current.transferKB} kt`, `${lh.next.transferKB} kt`],
+                    ['Pyyntöjä', lh.current.requests, lh.next.requests],
+                  ].map(([k, a, b]) => (
+                    <tr><td class="p-4 font-sans font-semibold">{k}</td><td class="p-4 text-muted">{a}</td><td class="p-4">{b}</td></tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <Rule title="Koko etusivu, ei pelkkä hero" text="Ensimmäinen mittaus tehtiin, kun uudessa oli vain navbar ja hero (99). Nyt mukana on koko sivu kuvineen, ja simuloitu mobiilitulos on 90. Paikallisesti havaittu LCP on alle 0,1 s; simuloidun arvion nostavat fontit, herokuva ja islandien JavaScript." />
+            <Rule title="Uusi mitattiin paikallisesti" text="Uusi build ajettiin localhostilla, nykyinen tuotannosta Cloudflaren takaa. Lighthouse simuloi molemmille saman hitaan mobiiliyhteyden, mutta palvelimen vasteaika jää pois. Reilu vertailu vaatii preview-julkaisun CDN:ään." />
+            <Rule title="Mitä tästä voi sanoa" text="Rakenne-ero on todellinen: valmis HTML ja kolme pientä islandia sivurakentajan noin tuhannen kilotavun JavaScriptin sijaan." />
+          </div>
+        </section>
+
+        <!-- ───────── 06 SEO ja GEO ───────── -->
+        <section id="seo" class="scroll-mt-8">
+          <SectionHead n="06" title="SEO ja GEO" accent="Löydettävissä haussa ja tekoälyn vastauksissa">
+            Hakukoneet ja tekoälyt, kuten ChatGPT, Perplexity ja Googlen AI-vastaukset, palkitsevat samoja asioita:
+            nopean sivun, selkeän rakenteen, luettavat vastaukset ja tiedon siitä, mitä palvelu on ja missä se
+            toimii. Etusivu on rakennettu niiden ympärille.
+          </SectionHead>
+
+          <div class="overflow-x-auto rounded-[1.5rem] border border-line bg-white">
+            <table class="w-full min-w-[640px] text-left text-[13px]">
+              <thead class="bg-canvas text-[12px] text-muted">
+                <tr><th class="p-4 font-medium"></th><th class="p-4 font-medium">clevoy.io nyt</th><th class="p-4 font-medium">Uusi etusivu</th></tr>
+              </thead>
+              <tbody class="divide-y divide-line">
+                {
+                  [
+                    ['Linkit kaupunkisivuille', '0 / 12 kaupunkisivua', 'Kaikki 12 sekä palvelusivut, yhteensä 16 sisäistä linkkiä'],
+                    ['Kysymykset ja vastaukset', 'Ei etusivulla', '6 kysymystä, vastaukset suoraan HTML:ssä'],
+                    ['Rakenteinen data', 'Organization, WebSite, WebPage, Breadcrumb (The SEO Framework)', 'Organization, jossa palvelut ja 7 kaupunkia (areaServed), sekä WebSite ja FAQPage'],
+                    ['Sivun muodostus', 'PHP ja sivurakentaja', 'Valmis HTML, jonka hakubotit ja tekoälyt lukevat ilman JavaScriptiä'],
+                    ['Nopeus (LCP, mobiili)', `${sec(lh.current.lcp)} s`, `${sec(lh.next.lcp)} s`],
+                  ].map(([k, a, b]) => (
+                    <tr>
+                      <td class="p-4 font-semibold">{k}</td>
+                      <td class="p-4 text-muted">{a}</td>
+                      <td class="p-4">{b}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <Rule title="Paikallinen haku" text="”Kotisiivous Espoo” -tyyppiset haut tuovat tilauksia. Kun etusivulta linkitetään jokaiseen palvelu ja kaupunki -sivuun, hakukone ymmärtää, että sivut ovat tärkeitä, ja käyttäjä löytää oman kaupunkinsa yhdellä klikkauksella." />
+            <Rule title="Tekoälyn vastaukset" text="Tekoälyt poimivat lyhyitä, faktapohjaisia kysymys ja vastaus -pareja. UKK:n jokaisella vastauksella on lähde: hinnat Clevoyn omilta sivuilta ja kotitalousvähennys Verohallinnolta." />
+            <Rule title="Yksi totuuden lähde" text="Palvelut, kaupungit, UKK ja rakenteinen data tulevat samasta datatiedostosta. Kun uusi kaupunki lisätään, se päivittyy sivulle ja schemaan samalla kertaa." />
+          </div>
+
+          <h3 class="mt-12 mb-4 text-[15px] font-semibold">Seuraavaksi</h3>
+          <ul class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white text-[13.5px]">
+            {
+              [
+                ['Sitemap ja robots.txt', '@astrojs/sitemap tuottaa sivukartan automaattisesti jokaisella buildilla.'],
+                ['Kaupunkisivut pohjista', 'Yksi pohja ja yksi datarivi kaupunkia kohden. Jokainen sivu saa omat hinnat, palveluntarjoajat ja LocalBusiness-tiedot.'],
+                ['Arviot buildissa', 'Trustmaryn luvut (nyt 4,82 / 38) haetaan buildin aikana, jolloin sivulla oleva luku ei vanhene.'],
+                ['Uudelleenohjaukset', 'Redirection-lisäosan säännöt viedään hostingin _redirects-tiedostoon ennen domainin vaihtoa, jotta nykyiset hakusijoitukset säilyvät.'],
+                ['llms.txt (valinnainen)', 'Lyhyt koneluettava yhteenveto palvelusta tekoälyjä varten. Tukea on vasta osalla tekoälypalveluista.'],
+              ].map(([t, d]) => (
+                <li class="grid grid-cols-1 gap-1 p-4 md:grid-cols-[220px_1fr] md:gap-6">
+                  <span class="font-semibold">{t}</span>
+                  <span class="text-muted">{d}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <!-- ───────── 07 Integraatiot ───────── -->
+        <section id="integraatiot" class="scroll-mt-8">
+          <SectionHead n="07" title="Integraatiot" accent="Palikat eivät ole WordPressissä, ne ovat sen päällä">
+            WordPress on todennäköisesti valittu juuri valmiiden palikoiden takia. Suurin osa niistä on kuitenkin
+            ulkoisia palveluita, jotka upotetaan skriptillä, ja ne toimivat yhtä lailla staattisella sivulla. Lista on
+            koottu julkisesta HTML:stä ja WordPressin rajapinnasta, joten pelkästään adminissa toimivia lisäosia voi
+            puuttua.
+          </SectionHead>
+          <div class="mb-3 grid grid-cols-2 gap-2 md:grid-cols-4">
+            {
+              (['Valmis', 'Helppo', 'Keskitaso', 'Poistuu'] as const).map((e) => (
+                <div class={`rounded-[1.5rem] p-5 ${e === 'Keskitaso' ? 'bg-ink text-white' : e === 'Poistuu' ? 'bg-canvas shadow-[inset_0_0_0_1px_var(--color-line)]' : 'bg-white shadow-[inset_0_0_0_1px_var(--color-line)]'}`}>
+                  <p class="text-[40px] leading-none font-semibold tracking-[-0.04em]">{integrations.filter((x) => x.effort === e).length}</p>
+                  <p class={`mt-3 text-[12.5px] ${e === 'Keskitaso' ? 'text-white/60' : 'text-muted'}`}>{e === 'Valmis' ? 'Toimii sellaisenaan' : e === 'Helppo' ? 'Pieni työ' : e === 'Keskitaso' ? 'Vaatii oman ratkaisun' : 'Ei tarvita enää'}</p>
+                </div>
+              ))
+            }
+          </div>
+          <div class="overflow-x-auto rounded-[1.5rem] border border-line bg-white">
+            <table class="w-full min-w-[760px] text-left text-[13px]">
+              <thead class="bg-canvas text-[12px] text-muted">
+                <tr><th class="p-4 font-medium">Palikka</th><th class="p-4 font-medium">Mitä tekee</th><th class="p-4 font-medium">Siirto</th><th class="p-4 font-medium">Työ</th></tr>
+              </thead>
+              <tbody class="divide-y divide-line align-top">
+                {
+                  integrations.map((x) => (
+                    <tr>
+                      <td class="p-4"><p class="font-semibold">{x.name}</p><p class="mt-1 font-mono text-[10.5px] text-muted">{x.found}</p></td>
+                      <td class="p-4 text-muted">{x.does}</td>
+                      <td class="p-4 leading-relaxed">{x.plan}</td>
+                      <td class="p-4"><span class={`rounded-full px-2.5 py-1 text-[11px] font-medium whitespace-nowrap ${x.effort === 'Keskitaso' ? 'bg-ink text-white' : x.effort === 'Poistuu' ? 'bg-canvas text-muted' : x.effort === 'Valmis' ? 'bg-plum-soft text-plum' : 'bg-mist-soft text-ink'}`}>{x.effort}</span></td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-[13px] text-muted">
+            Ainoa oikeasti uusi osa on yhteydenottolomakkeen lähetys. Muut ovat upotuksia, jotka siirtyvät
+            sivupohjaan, tai ominaisuuksia, joita staattinen sivu ei tarvitse.
+          </p>
+        </section>
+
+        <!-- ───────── 08 CMS ja siirtymä ───────── -->
+        <section id="siirtyma" class="scroll-mt-8">
+          <SectionHead n="08" title="CMS ja siirtymä" accent="Toimittajille mikään ei muutu ensin">
+            Tavoite on, että vaihto on mahdollisimman helppo: ei katkoja, ei menetettyjä hakusijoituksia, eikä uutta
+            työkalua opeteltavaksi heti alussa.
+          </SectionHead>
+
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <Faq q="Näyttääkö blogi samalta kuin nyt?" a="Ei. Headless-käytössä WordPress säilyttää vain tekstit ja kuvat. Ulkoasun tekee uusi sivu, joten blogi näyttää samalta kuin muu uusi sivusto. Kirjoittaminen tapahtuu edelleen tutussa WP-adminissa." />
+            <Faq q="Mistä maksetaan nyt?" a="WordPress itsessään on ilmainen. Kuluja tulee todennäköisesti hostingista (LiteSpeed-palvelin), Elementor Pron vuosilisenssistä ja mahdollisista maksullisista lisäosista. Tarkat summat selviävät Clevoyn laskuista." />
+            <Faq q="Mitä uusi maksaa?" a="Staattinen hosting on tämän kokoiselle sivulle yleensä ilmainen tai muutamia euroja kuukaudessa. Elementor Pron voi lopettaa, kun sivut eivät enää renderöidy sillä. WP-hosting jää vaiheeseen 2 asti." />
+            <Faq q="Mitä tapahtuu URL-osoitteille?" a="Ne pysyvät samoina. Nykyiset 35 sivua ja 12 artikkelia saavat saman slugin, ja Redirection-lisäosan olemassa olevat ohjaukset siirretään uuden sivun ohjaustiedostoon." />
+          </div>
+
+          <ol class="mt-10 flex flex-col gap-3">
+            {
+              [
+                {
+                  t: 'Vaihe 0 · Inventaario',
+                  d: 'Viedään sivut, artikkelit, SEO-otsikot (The SEO Framework), uudelleenohjaukset, lomakkeet (Brevo), evästebanneri (CookieYes), GTM-tagit ja Trustmary-widget listaksi. WordPressin REST API on jo auki, joten sisällön voi lukea suoraan.',
+                  tag: '1 viikko',
+                },
+                {
+                  t: 'Vaihe 1 · Uusi sivu, sama sisältö',
+                  d: 'Astro hakee artikkelit WordPressistä buildin aikana. Kun artikkeli julkaistaan WP:ssä, webhook käynnistää uuden buildin. Palvelu- ja kaupunkisivut tehdään pohjista. Julkaisu tapahtuu ensin preview-osoitteeseen, ja domain vaihdetaan vasta kun kaikki on tarkistettu.',
+                  tag: '3–5 viikkoa',
+                },
+                {
+                  t: 'Vaihe 2 · Valinnainen: WordPressistä luopuminen',
+                  d: 'Jos WP:tä käytetään enää vain blogiin, artikkelit siirretään Git-pohjaiseen CMS:ään (esim. Keystatic, ilmainen) tai Sanityyn. Silloin WP-hosting ja lisäosat voi lopettaa kokonaan.',
+                  tag: 'Kun sopii',
+                },
+              ].map((p, i) => (
+                <li class={`grid grid-cols-1 gap-3 rounded-[1.75rem] p-6 md:grid-cols-[1fr_auto] md:p-8 ${i === 1 ? 'bg-ink text-white' : 'border border-line bg-white'}`}>
+                  <div>
+                    <p class="text-[17px] font-semibold tracking-tight">{p.t}</p>
+                    <p class={`mt-2 max-w-[70ch] text-[14px] leading-relaxed ${i === 1 ? 'text-white/65' : 'text-muted'}`}>{p.d}</p>
+                  </div>
+                  <span class={`h-fit w-fit rounded-full px-3 py-1.5 font-mono text-[11px] ${i === 1 ? 'bg-white/10 text-white/80' : 'bg-canvas text-ink-soft'}`}>{p.tag}</span>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="mt-3 text-[13px] text-muted">Aika-arviot ovat suuntaa antavia ja tarkentuvat inventaarion jälkeen.</p>
+        </section>
+
+        <!-- ───────── 07 Päätösloki ───────── -->
+        <section id="paatokset" class="scroll-mt-8">
+          <SectionHead n="09" title="Päätösloki" accent="Mitä valittiin ja miksi">
+            Jokainen valinta kirjataan perusteluineen, myös se mikä hylättiin. Loki toimii myöhemmin case studyn
+            runkona.
+          </SectionHead>
+          <ol class="divide-y divide-line overflow-hidden rounded-[1.5rem] border border-line bg-white">
+            {
+              decisions.map((d) => (
+                <li class="grid grid-cols-1 gap-2 p-5 md:grid-cols-[120px_1fr] md:gap-6">
+                  <div class="flex items-center gap-2 md:flex-col md:items-start md:gap-1">
+                    <span class="rounded-full bg-mist-soft px-2.5 py-0.5 text-[11px] font-medium">{d.area}</span>
+                    <span class="font-mono text-[11px] text-muted">{d.date.split('-').reverse().join('.')}</span>
+                  </div>
+                  <div>
+                    <p class="text-[14.5px] font-semibold">{d.title}</p>
+                    <p class="mt-1 text-[13.5px] leading-relaxed text-muted">{d.why}</p>
+                    {d.rejected && <p class="mt-2 text-[12.5px] text-ink-soft"><span class="font-medium">Hylätty:</span> {d.rejected}</p>}
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <footer class="flex flex-col items-start justify-between gap-4 border-t border-line pt-8 text-[13px] text-muted md:flex-row md:items-center">
+          <Logo variant="ikkuna" size={16} />
+          <p>Konseptiehdotus. Ei Clevoy Oy:n virallista materiaalia.</p>
+          <a href="/" class="inline-flex items-center gap-1 text-ink hover:underline">Katso etusivu <ArrowUpRight size={13} /></a>
+        </footer>
+      </main>
+    </div>
+  </div>
+</Base>

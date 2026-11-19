@@ -1,0 +1,363 @@
+---
+/**
+ * "Mitä Clevoy tarjoaa" – bento on the light page (tiles are the only layer).
+ *   [ Läpinäkyvä hinnoittelu ........ ][ Arvostelut ]
+ *   [ Varaa heti ][ Reaaliaikainen seuranta ....... ]
+ * Each tile: product fragment on a soft stage, title + text below.
+ * Copy, notification texts and the review are Clevoy's own (clevoy.io + Trustmary).
+ * Reveal: tiles rise once when in view; [data-detail] parts play after they land.
+ * Phones: the four tiles become one swipeable row (next tile peeks in) instead of a
+ * three-screen stack. md: two columns, lg: the bento above.
+ */
+import { Check, Star } from '@phosphor-icons/react'
+import { WindowMark } from './Logo'
+
+const slots = [
+  { t: '10:00' },
+  { t: '12:00' },
+  { t: '14:00', picked: true },
+  { t: '16:30' },
+]
+const days = [
+  { d: 'Ma', n: 24, free: 0 },
+  { d: 'Ti', n: 25, free: 2 },
+  { d: 'Ke', n: 26, free: 3, today: true },
+  { d: 'To', n: 27, free: 1 },
+  { d: 'Pe', n: 28, free: 3 },
+  { d: 'La', n: 29, free: 2 },
+  { d: 'Su', n: 30, free: 0 },
+]
+const track = [
+  { label: 'Varaus vahvistettu', time: '8.54', state: 'done' },
+  { label: 'Siivooja matkalla', time: '9.43', state: 'done' },
+  { label: 'Siivous käynnissä', time: '10.02', state: 'active' },
+  { label: 'Valmis', time: '', state: 'todo' },
+] as const
+// Aggregate 4.82 / 38 and Sami K.'s 5-star review: Trustmary data on clevoy.io (2026-11-19)
+const rating = { score: 4.8, label: '4,8', count: 38 }
+const stars = Array.from({ length: 5 }, (_, i) => Math.max(0, Math.min(1, rating.score - i)))
+---
+
+<section aria-labelledby="tarjoaa-otsikko" class="mx-auto max-w-[1240px] px-4 pt-24 pb-8 md:px-8 md:pt-32">
+  <h2
+    id="tarjoaa-otsikko"
+    class="max-w-[18ch] text-[34px] leading-[1.05] font-semibold tracking-[-0.03em] text-ink md:text-[48px]"
+  >
+    Clevoy tekee siivouksen ostamisesta <span class="text-plum">vaivatonta</span>
+  </h2>
+
+  <div class="bento -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 md:mx-0 md:mt-14 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-6" role="region" aria-label="Clevoyn ominaisuudet" tabindex="0">
+    {/* Läpinäkyvä hinnoittelu */}
+    <article class="tile w-[84%] shrink-0 snap-start md:w-auto lg:col-span-4" data-reveal-item style="--seq:0">
+      <div aria-hidden="true" class="stage">
+        <div class="frag w-full max-w-[460px] p-4">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-[13px] font-semibold text-ink">Kotisiivous · Ke 26.11.</span>
+            <span class="text-[12px] text-muted">3 h</span>
+          </div>
+          <div class="grid grid-cols-4 gap-2">
+            {
+              slots.map((s) => (
+                <div class={`slot ${s.picked ? 'slot--on' : ''}`}>
+                  <span class="font-mono text-[13px]">{s.t}</span>
+                  {s.picked && (
+                    <span class="slot-check" data-detail>
+                      <Check size={10} weight="bold" />
+                    </span>
+                  )}
+                </div>
+              ))
+            }
+          </div>
+          <div class="mt-3 flex items-baseline justify-between border-t border-line pt-3" data-detail style="--d:1">
+            <span class="text-[12.5px] text-ink-soft">Kokonaishinta sis. alv</span>
+            <span class="font-mono text-[16px] font-medium text-ink">128,00 €</span>
+          </div>
+        </div>
+      </div>
+      <div class="copy">
+        <h3>Läpinäkyvä hinnoittelu</h3>
+        <p>Näet kokonaishinnan ennen kuin vahvistat varauksen. Hinnat sisältävät arvonlisäveron.</p>
+      </div>
+    </article>
+
+    {/* Asiakasarvostelut */}
+    <article class="tile w-[84%] shrink-0 snap-start md:w-auto lg:col-span-2" data-reveal-item style="--seq:1">
+      <div aria-hidden="true" class="stage stage--left">
+        <div class="w-full">
+          <div class="flex items-end gap-3">
+            <span class="text-[56px] leading-[0.85] font-semibold tracking-[-0.04em] text-ink">{rating.label}</span>
+            <span class="flex flex-col gap-1 pb-1">
+              <span class="flex gap-0.5">
+                {
+                  stars.map((fill) => (
+                    <span class="relative inline-block size-[16px]">
+                      <Star size={16} weight="fill" className="absolute inset-0 text-line" />
+                      {fill > 0 && (
+                        <span class="absolute inset-0 overflow-hidden" style={`width:${fill * 100}%`}>
+                          <Star size={16} weight="fill" className="text-star" />
+                        </span>
+                      )}
+                    </span>
+                  ))
+                }
+              </span>
+              <span class="text-[12.5px] text-ink-soft">{rating.count} arvostelua</span>
+            </span>
+          </div>
+          <figure class="frag mt-5 p-4" data-detail>
+            <blockquote class="text-[14px] leading-snug font-medium text-ink">
+              ”Siistiä jälkeä, kaikki hoitui mallikkaasti ja sovitusti.”
+            </blockquote>
+            <figcaption class="mt-2 text-[12.5px] text-ink-soft">Sami K. · Trustmary-arvio</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="copy">
+        <h3>Asiakasarvostelut apunasi</h3>
+        <p>Lue muiden asiakkaiden arvostelut ennen varausta.</p>
+      </div>
+    </article>
+
+    {/* Varaa heti */}
+    <article class="tile w-[84%] shrink-0 snap-start md:w-auto lg:col-span-2" data-reveal-item style="--seq:0">
+      <div aria-hidden="true" class="stage">
+        <div class="frag w-full p-4">
+          <div class="grid grid-cols-7 gap-1">
+            {
+              days.map((d, i) => (
+                <div class={`day ${d.today ? 'day--on' : ''}`}>
+                  <span class="text-[10px] opacity-60">{d.d}</span>
+                  <span class="font-mono text-[13px]">{d.n}</span>
+                  <span class="flex h-[5px] gap-[2px]" data-detail style={`--d:${i * 0.25}`}>
+                    {Array.from({ length: d.free }).map(() => (
+                      <span class={`size-[4px] rounded-full ${d.today ? 'bg-white' : 'bg-plum'}`} />
+                    ))}
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+          <p class="mt-3 text-[12.5px] text-ink-soft" data-detail style="--d:2">
+            Ensimmäinen vapaa aika <span class="font-medium text-ink">tänään klo 14.00</span>
+          </p>
+        </div>
+      </div>
+      <div class="copy">
+        <h3>Varaa heti</h3>
+        <p>Näet vapaat ajat heti ja varaat sinulle sopivan ajan.</p>
+      </div>
+    </article>
+
+    {/* Reaaliaikainen seuranta */}
+    <article class="tile w-[84%] shrink-0 snap-start md:w-auto lg:col-span-4" data-reveal-item style="--seq:1">
+      <div aria-hidden="true" class="stage">
+        <div class="grid w-full max-w-[560px] grid-cols-1 items-center gap-3 sm:grid-cols-[1.1fr_1fr]">
+          {/* Phones: the timeline alone tells the story (the notifications repeat its first two steps) */}
+          <div class="hidden flex-col gap-2 sm:flex">
+            <div class="notif">
+              <span class="notif-icon"><WindowMark size={14} ink="#f5f6f8" accent="#d08cbb" /></span>
+              <span class="min-w-0 flex-1">
+                <span class="flex justify-between text-[11px] text-muted"><span>Clevoy</span><span>8.54</span></span>
+                <span class="block text-[13px] font-semibold text-ink">Varaus vahvistettu</span>
+                <span class="block truncate text-[12px] text-ink-soft">Varauksesi kohteessa Koti on vahvistettu</span>
+              </span>
+            </div>
+            <div class="notif" data-detail style="--d:1">
+              <span class="notif-icon"><WindowMark size={14} ink="#f5f6f8" accent="#d08cbb" /></span>
+              <span class="min-w-0 flex-1">
+                <span class="flex justify-between text-[11px] text-muted"><span>Clevoy</span><span>9.43</span></span>
+                <span class="block text-[13px] font-semibold text-ink">Siivooja matkalla</span>
+                <span class="block truncate text-[12px] text-ink-soft">Siivoojasi on matkalla kohteeseen Koti</span>
+              </span>
+            </div>
+          </div>
+          <div class="frag p-4">
+            <ul class="flex flex-col">
+              {
+                track.map((t, i) => (
+                  <li class="relative flex items-center gap-3 pb-3.5 last:pb-0">
+                    {i < track.length - 1 && (
+                      <span class={`absolute top-5 left-[9px] h-[calc(100%-12px)] w-px ${t.state === 'done' ? 'bg-plum' : 'bg-line'}`} />
+                    )}
+                    <span
+                      class={`relative grid size-[19px] shrink-0 place-items-center rounded-full ${
+                        t.state === 'done'
+                          ? 'bg-plum text-white'
+                          : t.state === 'active'
+                            ? 'track-live bg-white ring-2 ring-plum'
+                            : 'bg-white ring-1 ring-line'
+                      }`}
+                    >
+                      {t.state === 'done' && <Check size={10} weight="bold" />}
+                      {t.state === 'active' && <span class="size-[7px] rounded-full bg-plum" />}
+                    </span>
+                    <span class={`flex-1 text-[12.5px] ${t.state === 'todo' ? 'text-muted' : 'text-ink'} ${t.state === 'active' ? 'font-semibold' : ''}`}>
+                      {t.label}
+                    </span>
+                    <span class="font-mono text-[11px] text-muted">{t.time}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="copy">
+        <h3>Reaaliaikainen seuranta</h3>
+        <p>Saat ilmoituksen, kun varaus on vahvistettu ja siivooja on matkalla. Voit myös viestiä siivoojan kanssa sovelluksessa.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script>
+  import '../scripts/reveal'
+</script>
+
+<style>
+  .bento {
+    scrollbar-width: none;
+  }
+  .bento::-webkit-scrollbar {
+    display: none;
+  }
+  .bento:focus-visible {
+    outline: 2px solid var(--color-plum);
+    outline-offset: 4px;
+    border-radius: 1.75rem;
+  }
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-radius: 1.75rem;
+    background: #fff;
+    padding: 0.75rem;
+    box-shadow: 0 0 0 1px var(--color-line), 0 1px 2px rgb(21 23 28 / 0.04);
+  }
+  .stage {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    min-height: 232px;
+    border-radius: 1.25rem;
+    background: radial-gradient(120% 120% at 50% 0%, #ffffff 0%, var(--color-accent-soft) 85%);
+    box-shadow: inset 0 0 0 1px rgb(21 23 28 / 0.04);
+    padding: 1.75rem 1.25rem;
+  }
+  .stage--left {
+    place-items: center start;
+  }
+  /* Phones (swipe row): one fixed stage height so the row is compact and even */
+  @media (max-width: 767px) {
+    .stage {
+      flex: none;
+      height: 236px;
+      min-height: 0;
+      padding: 1rem 0.9rem;
+    }
+  }
+  /* Same stage height in every tile, so titles in a row sit on one line
+     regardless of how long each tile's text is */
+  @media (min-width: 1024px) {
+    .stage {
+      flex: none;
+      height: 248px;
+      min-height: 0;
+    }
+  }
+  .copy {
+    padding: 0 0.75rem 0.75rem;
+  }
+  .copy h3 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+  .copy p {
+    margin-top: 0.35rem;
+    max-width: 52ch;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .frag {
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--color-line), 0 16px 32px -20px rgb(21 23 28 / 0.28);
+  }
+  .slot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    border-radius: 0.8rem;
+    padding: 0.7rem 0.25rem;
+    color: var(--color-ink);
+    box-shadow: 0 0 0 1px var(--color-line);
+  }
+  .slot--on {
+    background: var(--color-plum);
+    color: #fff;
+    box-shadow: 0 0 0 1px var(--color-plum);
+  }
+  .slot-check {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--color-plum);
+    box-shadow: 0 0 0 1px var(--color-line), 0 4px 10px -4px rgb(21 23 28 / 0.35);
+  }
+  .day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    border-radius: 0.7rem;
+    padding: 0.45rem 0;
+    color: var(--color-ink);
+  }
+  .day--on {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  .notif {
+    display: flex;
+    gap: 0.625rem;
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 0.9);
+    padding: 0.65rem 0.75rem;
+    box-shadow: 0 0 0 1px var(--color-line), 0 12px 24px -16px rgb(21 23 28 / 0.3);
+  }
+  .notif-icon {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--color-ink);
+  }
+  .track-live::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 2px var(--color-plum);
+    animation: live 2s var(--ease-out-strong) infinite;
+  }
+  @keyframes live {
+    from { transform: scale(1); opacity: 0.6; }
+    to { transform: scale(1.9); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track-live::after { animation: none; display: none; }
+  }
+</style>

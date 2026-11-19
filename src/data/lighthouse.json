@@ -1,0 +1,42 @@
+{
+  "current": {
+    "url": "https://clevoy.io/",
+    "runs": 3,
+    "fetchedAt": "2026-11-18T20:58:20.317Z",
+    "lighthouse": "12.8.2",
+    "scores": {
+      "performance": 67,
+      "accessibility": 94,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "lcp": 7436.214999999999,
+    "fcp": 3902.537500000001,
+    "tbt": 44,
+    "cls": 0.003295354008098658,
+    "si": 3902.537500000001,
+    "requests": 132,
+    "transferKB": 1664,
+    "jsKB": 1010
+  },
+  "next": {
+    "url": "http://localhost:4321/",
+    "runs": 3,
+    "fetchedAt": "2026-11-19T13:16:55.569Z",
+    "lighthouse": "12.8.2",
+    "scores": {
+      "performance": 90,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "lcp": 3378.4626,
+    "fcp": 1879.2478500000002,
+    "tbt": 0,
+    "cls": 0,
+    "si": 1879.2478500000002,
+    "requests": 26,
+    "transferKB": 377,
+    "jsKB": 143
+  }
+}

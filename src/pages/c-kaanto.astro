@@ -1,0 +1,162 @@
+---
+/**
+ * TEMPORARY prototype: the Ikkuna mark turned a quarter counter-clockwise reads as a C.
+ * Three places to try it: app loader, inline button loader, footer wordmark sign-off.
+ * Rotation is about the mark's own centre (12,12 = the centre of the viewBox and of the ink).
+ * Reduced motion: no turn, the lit pane breathes instead (loaders) / the C is shown at rest (wordmark).
+ */
+import Base from '../layouts/Base.astro'
+import { ClevoyMark } from '../components/Logo'
+---
+
+<Base title="C-kääntö">
+  <main class="mx-auto max-w-[1100px] px-4 py-12 md:px-8">
+    <h1 class="text-[28px] font-semibold tracking-tight">Ikkuna kääntyy C:ksi</h1>
+    <p class="mt-2 max-w-[62ch] text-[14.5px] text-muted">
+      Prototyyppi kolmeen paikkaan. Kääntö on neljännes vastapäivään merkin omasta keskipisteestä, yhdellä
+      pehmeällä ja vähän ennen loppua hidastuvalla liikkeellä, ei jousella.
+    </p>
+
+    <div class="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+      {/* 1 · App loader */}
+      <section class="overflow-hidden rounded-[1.75rem] border border-line bg-white">
+        <div class="grid aspect-[4/3] place-items-center bg-ink">
+          <div class="flex flex-col items-center gap-5">
+            <span class="c-loop inline-flex"><ClevoyMark size={56} tone="dark" /></span>
+            <p class="text-[14px] text-white/60" role="status">Haetaan vapaita aikoja…</p>
+          </div>
+        </div>
+        <div class="p-5">
+          <p class="text-[14px] font-semibold">1 · Latausanimaatio sovelluksessa</p>
+          <p class="mt-0.5 text-[13px] text-muted">Ikkuna → C → ikkuna, 3 s:n silmukka. Pysähdykset kummassakin asennossa, jotta molemmat ehtii lukea.</p>
+        </div>
+      </section>
+
+      {/* 2 · Inline button loader */}
+      <section class="overflow-hidden rounded-[1.75rem] border border-line bg-white">
+        <div class="grid aspect-[4/3] place-items-center bg-canvas">
+          <div class="flex flex-col items-center gap-4">
+            <span class="inline-flex items-center gap-2.5 rounded-full bg-ink py-3 pr-6 pl-4 text-[15px] font-medium text-white" role="status">
+              <span class="c-loop inline-flex"><ClevoyMark size={18} tone="dark" /></span>
+              Varataan…
+            </span>
+            <span class="inline-flex items-center gap-2.5 rounded-full bg-white py-3 pr-6 pl-4 text-[15px] font-medium text-ink shadow-[0_0_0_1px_var(--color-line)]" role="status">
+              <span class="c-loop inline-flex"><ClevoyMark size={18} /></span>
+              Haetaan hintaa…
+            </span>
+          </div>
+        </div>
+        <div class="p-5">
+          <p class="text-[14px] font-semibold">2 · Pieni lataus napissa</p>
+          <p class="mt-0.5 text-[13px] text-muted">Sama liike 18 px:n litteällä merkillä, kun varaus tai haku on käynnissä.</p>
+        </div>
+      </section>
+
+      {/* 3 · Footer wordmark */}
+      <section class="overflow-hidden rounded-[1.75rem] border border-line bg-white md:col-span-2">
+        <div class="relative grid min-h-[300px] place-items-center overflow-hidden bg-ink px-6">
+          <p class="cword text-[clamp(72px,14vw,180px)] leading-none font-semibold tracking-[-0.06em] text-white" aria-label="Clevoy">
+            <span class="cword-mark" aria-hidden="true"><ClevoyMark size={200} tone="dark" /></span><span aria-hidden="true">levoy</span>
+          </p>
+          <button type="button" class="press absolute right-5 bottom-5 rounded-full bg-white/10 px-4 py-2 text-[13px] font-medium text-white hover:bg-white/15" data-replay>
+            Toista
+          </button>
+        </div>
+        <div class="p-5">
+          <p class="text-[14px] font-semibold">3 · Footerin iso sana</p>
+          <p class="mt-0.5 text-[13px] text-muted">Kun sana tulee näkyviin, ikkuna kääntyy kerran ja asettuu sanan C:ksi. Kerran per sivulataus, ei silmukkaa.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+</Base>
+
+<style>
+  /* 1 & 2 · loop: rest as window, turn, rest as C, turn back */
+  .c-loop {
+    transform-origin: 50% 50%;
+    animation: c-loop 3s infinite;
+  }
+  @keyframes c-loop {
+    0%,
+    18% {
+      transform: rotate(0deg);
+      animation-timing-function: var(--ease-in-out-strong);
+    }
+    42%,
+    68% {
+      transform: rotate(-90deg);
+      animation-timing-function: var(--ease-in-out-strong);
+    }
+    92%,
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  /* 3 · wordmark: the mark stands in for the C. Sized so the turned mark ≈ cap height. */
+  .cword {
+    display: flex;
+    align-items: baseline;
+  }
+  .cword-mark {
+    display: inline-flex;
+    width: 0.96em;
+    /* turned, the ink leaves 2/24 empty on each side: pull "levoy" in to normal letter spacing */
+    margin-right: -0.05em;
+    margin-left: -0.08em;
+    /* turned, the ink leaves 3.5/24 empty below: sit the ink on the baseline */
+    transform: translateY(0.14em);
+  }
+  .cword-mark :global(svg) {
+    width: 0.96em;
+    height: 0.96em;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+  }
+  .cword.is-armed .cword-mark :global(svg) {
+    transform: rotate(0deg);
+  }
+  .cword.is-armed.is-in .cword-mark :global(svg) {
+    transform: rotate(-90deg);
+    transition: transform 1100ms var(--ease-in-out-strong) 350ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .c-loop {
+      animation: c-breathe 2.4s ease-in-out infinite;
+    }
+    @keyframes c-breathe {
+      50% {
+        opacity: 0.55;
+      }
+    }
+    .cword.is-armed .cword-mark :global(svg),
+    .cword.is-armed.is-in .cword-mark :global(svg) {
+      transform: rotate(-90deg);
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const word = document.querySelector<HTMLElement>('.cword')!
+  const play = () => {
+    word.classList.remove('is-in')
+    word.classList.add('is-armed')
+    void word.offsetWidth
+    requestAnimationFrame(() => word.classList.add('is-in'))
+  }
+  // Play once when the word scrolls into view (in the real footer: the shared reveal script).
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        play()
+        io.disconnect()
+      }
+    },
+    { threshold: 0.6 },
+  )
+  io.observe(word)
+  document.querySelector('[data-replay]')!.addEventListener('click', play)
+</script>

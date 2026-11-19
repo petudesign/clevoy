@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <style>
+    .frame { fill: #15171c }
+    .pane { fill: #b8679f }
+    @media (prefers-color-scheme: dark) {
+      .frame { fill: #f5f6f8 }
+      .pane { fill: #d08cbb }
+    }
+  </style>
+  <path class="frame" d="M3.5 11.05V10.5a8.5 8.5 0 0 1 7.55-8.44V9.45a1.6 1.6 0 0 1-1.6 1.6H3.5z"/>
+  <path class="pane" d="M12.95 2.06A8.5 8.5 0 0 1 20.5 10.5v.55h-5.95a1.6 1.6 0 0 1-1.6-1.6z"/>
+  <path class="frame" d="M3.5 12.95h5.95a1.6 1.6 0 0 1 1.6 1.6V22H3.5z"/>
+  <path class="frame" d="M14.55 12.95H20.5V22h-7.55v-7.45a1.6 1.6 0 0 1 1.6-1.6z"/>
+</svg>

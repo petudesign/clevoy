@@ -1,0 +1,29 @@
+---
+/**
+ * Primary CTA – "circle expand".
+ * Rest:  ink pill, label, light circle with ↗ on the right.
+ * Hover: the circle grows from where it sits until it fills the pill (origin = the trigger),
+ *        the label flips to ink, the circle turns ink and the arrow turns ↗ → →.
+ * Pure CSS (.cx in global.css). Touch: no hover; :active gives the press. Reduced motion:
+ * colours swap without the expand or the turn.
+ * variant="light" is the inverse, for dark panels.
+ */
+import { ArrowRight } from '@phosphor-icons/react'
+
+interface Props {
+  href: string
+  label: string
+  variant?: 'dark' | 'light'
+  id?: string
+  size?: 'md' | 'sm'
+}
+const { href, label, variant = 'dark', id, size = 'md' } = Astro.props
+---
+
+<a href={href} id={id} class:list={['cx', variant === 'light' && 'cx--light', size === 'sm' && 'cx--sm']}>
+  <span class="cx-fill" aria-hidden="true"></span>
+  <span class="cx-label">{label}</span>
+  <span class="cx-icon" aria-hidden="true">
+    <ArrowRight size={size === 'sm' ? 16 : 20} weight="bold" className="cx-arrow" />
+  </span>
+</a>

@@ -1,0 +1,79 @@
+---
+/**
+ * FAQ – answers are in the HTML (native <details>, no JS), so search engines and
+ * AI answer engines can read them. Same data feeds the FAQPage JSON-LD on index.astro.
+ * Opening animates height where the browser supports `interpolate-size`; elsewhere it
+ * simply opens.
+ */
+import { Plus } from '@phosphor-icons/react'
+import { faq } from '../data/site'
+---
+
+<section aria-labelledby="ukk-otsikko" class="mx-auto max-w-[1240px] px-4 pt-24 pb-8 md:px-8 md:pt-32">
+  <div class="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <div data-reveal-item style="--seq:0">
+      <h2 id="ukk-otsikko" class="text-[34px] leading-[1.05] font-semibold tracking-[-0.03em] text-ink md:text-[48px]">
+        Usein kysyttyä
+      </h2>
+      <p class="mt-4 max-w-[36ch] text-[16px] leading-relaxed text-muted">
+        Hinnat, kotitalousvähennys ja varaaminen lyhyesti. Lisää vastauksia löydät{' '}
+        <a href="/ukk/" class="text-ink underline decoration-ink/25 underline-offset-[4px] hover:decoration-ink">UKK-sivulta</a>.
+      </p>
+    </div>
+
+    <div class="divide-y divide-line border-y border-line" data-reveal-item style="--seq:1">
+      {
+        faq.map((f, i) => (
+          <details class="faq group" name="ukk" open={i === 0}>
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-[17px] font-semibold tracking-[-0.01em] text-ink md:text-[18px]">
+              {f.q}
+              <span class="grid size-8 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-ink transition-transform duration-300 ease-[var(--ease-out-strong)] group-open:rotate-45">
+                <Plus size={14} weight="bold" />
+              </span>
+            </summary>
+            <p class="max-w-[62ch] pb-6 text-[15.5px] leading-relaxed text-ink-soft">{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary:focus-visible {
+    outline: 2px solid var(--color-plum);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+  /* Smooth open/close where supported (Chromium 131+); others open instantly */
+  @supports (interpolate-size: allow-keywords) {
+    .faq {
+      interpolate-size: allow-keywords;
+    }
+    .faq::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        block-size 400ms var(--ease-out-strong),
+        opacity 300ms var(--ease-out-strong),
+        content-visibility 400ms allow-discrete;
+    }
+    .faq[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq::details-content {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/reveal'
+</script>

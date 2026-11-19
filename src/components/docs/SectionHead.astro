@@ -1,0 +1,13 @@
+---
+interface Props { n: string; title: string; accent: string }
+const { n, title, accent } = Astro.props
+---
+<div class="mb-10 grid grid-cols-1 gap-6 md:mb-12 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+  <div>
+    <p class="mb-4 flex items-baseline gap-3 border-t border-line pt-4 text-[13px] text-ink-soft">
+      <span class="font-mono text-[12px] text-plum">{n}</span>{title}
+    </p>
+    <h2 class="text-[32px] leading-[1.05] font-semibold tracking-[-0.03em] text-ink md:text-[44px]">{accent}</h2>
+  </div>
+  <p class="max-w-[60ch] text-[15px] leading-relaxed text-muted"><slot /></p>
+</div>

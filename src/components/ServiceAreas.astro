@@ -1,0 +1,111 @@
+---
+/**
+ * Breaker section (plum) + local SEO: every service × city page on clevoy.io gets a
+ * crawlable link from the homepage. Today the homepage links to none of them.
+ * Data: src/data/site.ts (slugs mirror the current WordPress pages).
+ */
+import { ArrowUpRight } from '@phosphor-icons/react'
+import { Image } from 'astro:assets'
+import koti from '../assets/service-koti.jpg'
+import muutto from '../assets/service-muutto.jpg'
+import airbnb from '../assets/service-airbnb.jpg'
+
+// One small photo per service so the rows differ at a glance (Pexels 5591653, 3125905, 7746574).
+const photos: Record<string, ImageMetadata> = { kotisiivous: koti, muuttosiivous: muutto, 'airbnb-siivous': airbnb }
+import { WindowMarkSoft } from './Logo'
+import { serviceCities, businessServices, cityHref, allCities } from '../data/site'
+---
+
+<section aria-labelledby="alueet-otsikko" class="px-3 pt-24 md:px-4 md:pt-32">
+  <div class="relative overflow-hidden rounded-[2rem] bg-plum text-white md:rounded-[2.5rem]">
+    {/* Brand mark as a quiet watermark – the only decoration */}
+    <div aria-hidden="true" class="pointer-events-none absolute -bottom-24 -left-16 opacity-[0.07] md:-bottom-32 md:-left-20">
+      <WindowMarkSoft size={420} ink="#ffffff" />
+    </div>
+
+    <div
+      class="relative mx-auto grid max-w-[1240px] grid-cols-1 gap-12 px-5 py-12 md:px-8 md:py-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-[72px]"
+    >
+      <div class="flex flex-col items-start" data-reveal-item style="--seq:0">
+        <h2 id="alueet-otsikko" class="text-[34px] leading-[1.05] font-semibold tracking-[-0.03em] md:text-[48px]">
+          Siivous lähelläsi
+        </h2>
+        <p class="mt-4 max-w-[40ch] text-[16px] leading-relaxed text-white/80">
+          Clevoyn kautta varaat siivouksen {allCities.length} kaupungissa. Valitse palvelu ja kaupunki, niin näet
+          paikalliset palveluntarjoajat, hinnat ja vapaat ajat.
+        </p>
+
+        <div class="mt-10 w-full border-t border-white/15 pt-6">
+          <h3 class="text-[13px] font-medium text-white/70">Yrityksille ja taloyhtiöille</h3>
+          <ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+            {
+              businessServices.map((b) => (
+                <li class="text-[14.5px] text-white/85">
+                  {b.href ? (
+                    <a href={b.href} class="text-white underline decoration-white/30 underline-offset-[5px] transition-colors hover:decoration-white">
+                      {b.name}
+                    </a>
+                  ) : (
+                    b.name
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <ul class="flex flex-col divide-y divide-white/15 border-y border-white/15">
+        {
+          serviceCities.map((s, i) => (
+            <li class="grid grid-cols-1 gap-4 py-7 md:grid-cols-[1.25fr_1fr] md:gap-8" data-reveal-item style={`--seq:${i + 1}`}>
+              <div class="flex items-start gap-4">
+                {photos[s.slug] && (
+                  <Image
+                    src={photos[s.slug]}
+                    alt=""
+                    width={176}
+                    height={176}
+                    densities={[1, 2]}
+                    loading="lazy"
+                    class="size-[72px] shrink-0 rounded-2xl object-cover saturate-[0.8] shadow-[0_0_0_1px_rgba(255,255,255,0.18)] md:size-[88px]"
+                  />
+                )}
+                <div>
+                <h3 class="text-[22px] font-semibold tracking-[-0.01em] whitespace-nowrap">
+                  <a href={`/${s.slug}/`} class="group inline-flex items-center gap-1.5">
+                    {s.service}
+                    <ArrowUpRight
+                      size={16}
+                      weight="bold"
+                      className="opacity-60 transition-transform duration-200 ease-[var(--ease-out-strong)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </a>
+                </h3>
+                <p class="mt-1.5 text-[14.5px] leading-relaxed text-white/80">{s.blurb}</p>
+                </div>
+              </div>
+              <ul class="flex flex-wrap content-start gap-2" aria-label={`${s.service} kaupungeittain`}>
+                {s.cities.map((c) => (
+                  <li>
+                    <a
+                      href={cityHref(s.slug, c)}
+                      class="press inline-flex rounded-full bg-white/[0.12] px-3.5 py-2 text-[14px] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] transition-colors hover:bg-white/[0.22]"
+                    >
+                      <span class="sr-only">{s.service} </span>
+                      {c}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/reveal'
+</script>
